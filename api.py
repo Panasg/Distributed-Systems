@@ -88,7 +88,6 @@ def register_nodes():
     response = {
         'message': 'New nodes have been added',
         'total_nodes': list(blockchain.nodes),
-        'nodes': blockchain.nodes,
     }
 
     return jsonify(response), 201
