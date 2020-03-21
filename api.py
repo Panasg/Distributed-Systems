@@ -8,6 +8,8 @@ from flask import Flask, jsonify, request
 import requests
 #import flask
 import block_chain
+import data
+import setupNetwork
 
 # Instantiate the Node
 app = Flask(__name__)
@@ -22,7 +24,6 @@ blockchain = block_chain.Blockchain()
 @app.route('/mine', methods=['GET'])
 def mine():
     # We run the proof of work algorithm to get the next proof...
-    consensus()
     last_block = blockchain.last_block
     proof = blockchain.proof_of_work(last_block)
 
@@ -72,12 +73,12 @@ def full_chain():
     }
     return jsonify(response), 200
 
-
 @app.route('/nodes/register', methods=['POST'])
 def register_nodes():
     values = request.get_json()
 
     nodes = values.get('nodes')
+
     if nodes is None:
         return "Error: Please supply a valid list of nodes", 400
 
@@ -87,9 +88,10 @@ def register_nodes():
     response = {
         'message': 'New nodes have been added',
         'total_nodes': list(blockchain.nodes),
+        'nodes': blockchain.nodes,
     }
-    return jsonify(response), 201
 
+    return jsonify(response), 201
 
 @app.route('/nodes/resolve', methods=['GET'])
 def consensus():
@@ -109,12 +111,42 @@ def consensus():
     return jsonify(response), 200
 
 
+@app.route('/setup', methods=['GET'])
+def setup():
+    if data.myPort!=data.adminPort:
+        res={"Message":"I Ain't admin"}
+        return jsonify(res),200
+    else:
+        values = request.get_json()
+        nodes = values.get('nodes')
+        res={"Message":"Wait for everybodt to start"}
+        setupNetwork.register(nodes)
+    return jsonify(res),200
+
+
 if __name__ == '__main__':
     from argparse import ArgumentParser
 
     parser = ArgumentParser()
     parser.add_argument('-p', '--port', default=5000, type=int, help='port to listen on')
+    parser.add_argument('-a', '--admin', default=5000, type=int, help='port of admin')
     args = parser.parse_args()
-    port = args.port
+
+    data.myPort=port = args.port
+    data.adminPort=args.admin
+    print(f'My port {data.myPort} ,Admin\'s port {data.adminPort}')
+
+    if data.myPort!=data.adminPort:#expecting admin to be listening
+        myInfo={
+            "nodes":[f"http://localhost:{data.myPort}"]
+        }
+        kwargs = {}
+        kwargs['timeout'] = 5
+        setupResponse=requests.get(f'http://localhost:{data.adminPort}/setup',json={"nodes":[f"http://localhost:{data.myPort}"]},**kwargs)
+        print(f"Setup Response {setupResponse}")
+    else:#admin is not listening yet
+        myNode=[f"http://localhost:{data.myPort}"]
+        setupNetwork.register(myNode)
 
     app.run(host='0.0.0.0', port=port)
+    print("After run")
