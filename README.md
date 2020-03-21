@@ -12,6 +12,6 @@ $ pipenv install
 ```
 
 4. Run the server:
-    * `$ pipenv run python blockchain.py`
-    * `$ pipenv run python blockchain.py -p 5001`
-    * `$ pipenv run python blockchain.py --port 5002`
+    * `$ pipenv run python blockchain.py -p 5000 -a 5000`
+    * `$ pipenv run python blockchain.py -p 5001 -a 5000`
+    * `$ pipenv run python blockchain.py -p 5002 -a 5000`
