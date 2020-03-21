@@ -21,7 +21,7 @@ class Blockchain:
         """
         Add a new node to the list of nodes
         :param address: Address of node. Eg. 'http://192.168.0.5:5000'
-        """        
+        """
         parsed_url = urlparse(address)
         if parsed_url.netloc:
             self.nodes.add(parsed_url.netloc)
@@ -109,7 +109,9 @@ class Blockchain:
             'transactions': self.current_transactions,
             'proof': proof,
             'previous_hash': previous_hash or self.hash(self.chain[-1]),
+            'current_hash':"string"
         }
+        block.current_hash=self.hash(block)
 
         # Reset the current list of transactions
         self.current_transactions = []
@@ -145,7 +147,15 @@ class Blockchain:
         """
 
         # We must make sure that the Dictionary is Ordered, or we'll have inconsistent hashes
-        block_string = json.dumps(block, sort_keys=True).encode()
+        fakeBlock= {
+            'index': block.index,
+            'timestamp': block.timestamp,
+            'transactions': block.transactions,
+            'proof': block.proof,
+            'previous_hash': block.previous_hash,
+        }
+
+        block_string = json.dumps(fakeBlock, sort_keys=True).encode()
         return hashlib.sha256(block_string).hexdigest()
 
     def proof_of_work(self, last_block):

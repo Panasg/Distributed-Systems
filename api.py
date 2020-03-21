@@ -10,6 +10,7 @@ import requests
 import block_chain
 import data
 import setupNetwork
+import wallet
 
 # Instantiate the Node
 app = Flask(__name__)
@@ -133,19 +134,22 @@ if __name__ == '__main__':
 
     data.myPort=port = args.port
     data.adminPort=args.admin
+    wallet.initKeys()
     print(f'My port {data.myPort} ,Admin\'s port {data.adminPort}')
 
     if data.myPort!=data.adminPort:#expecting admin to be listening
         myInfo={
-            "nodes":[f"http://localhost:{data.myPort}"]
+            "nodes":[f"http://localhost:{data.myPort}",wallet.publicKey]
         }
         kwargs = {}
         kwargs['timeout'] = 5
         setupResponse=requests.get(f'http://localhost:{data.adminPort}/setup',json={"nodes":[f"http://localhost:{data.myPort}"]},**kwargs)
         print(f"Setup Response {setupResponse}")
     else:#admin is not listening yet
-        myNode=[f"http://localhost:{data.myPort}"]
+        myNode=[f"http://localhost:{data.myPort}",wallet.publicKey]
         setupNetwork.register(myNode)
+
+
 
     app.run(host='0.0.0.0', port=port)
     print("After run")
