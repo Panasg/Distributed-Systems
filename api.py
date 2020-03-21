@@ -7,7 +7,7 @@ from uuid import uuid4
 from flask import Flask, jsonify, request
 import requests
 #import flask
-import blockChain
+import block_chain
 
 # Instantiate the Node
 app = Flask(__name__)
@@ -16,7 +16,7 @@ app = Flask(__name__)
 node_identifier = str(uuid4()).replace('-', '')
 
 # Instantiate the Blockchain
-blockchain = blockChain.Blockchain()
+blockchain = block_chain.Blockchain()
 
 
 @app.route('/mine', methods=['GET'])
