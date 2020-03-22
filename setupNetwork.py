@@ -24,7 +24,9 @@ def informEveryParticipant():
     time.sleep(2)
     kwargs = {}
     kwargs['timeout'] = 5
+    body = {"nodes":tempNodes}
     for node in tempNodes:
         print(node+"/nodes/register")
         response=requests.post(node+"/nodes/register",json=body,**kwargs)
-        print(response.status_code+response.json())
+        print(response.status_code)
+        print(response.json)

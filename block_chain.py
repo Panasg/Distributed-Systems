@@ -111,7 +111,7 @@ class Blockchain:
             'previous_hash': previous_hash or self.hash(self.chain[-1]),
             'current_hash':"string"
         }
-        block.current_hash=self.hash(block)
+        block['current_hash']=self.hash(block)
 
         # Reset the current list of transactions
         self.current_transactions = []
@@ -148,11 +148,11 @@ class Blockchain:
 
         # We must make sure that the Dictionary is Ordered, or we'll have inconsistent hashes
         fakeBlock= {
-            'index': block.index,
-            'timestamp': block.timestamp,
-            'transactions': block.transactions,
-            'proof': block.proof,
-            'previous_hash': block.previous_hash,
+            'index': block['index'],
+            'timestamp': block['timestamp'],
+            'transactions': block['transactions'],
+            'proof': block['proof'],
+            'previous_hash': block['previous_hash'],
         }
 
         block_string = json.dumps(fakeBlock, sort_keys=True).encode()

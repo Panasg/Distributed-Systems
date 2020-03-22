@@ -1,6 +1,7 @@
 #from Crypto.PublicKey import RSA
 #from Crypto.Hash import SHA384
-import Crypto
+'''
+import pycrypto
 
 publicKey
 privateKey
@@ -14,3 +15,4 @@ def initKeys():
 
     # Token is the sha of a part of the private key.
     token = SHA384.new(state.privkey[::2].encode()).hexdigest()
+'''
