@@ -113,15 +113,17 @@ def consensus():
 
 @app.route('/setup', methods=['GET'])
 def setup():
+
     if data.myPort!=data.adminPort:
         res={"Message":"I Ain't admin"}
         return jsonify(res),200
     else:
-        values = request.get_json()
-        nodes = values.get('nodes')
+        values = request.form.to_dict()
+
         res={"Message":"Wait for everybodt to start"}
-        setupNetwork.register(nodes)
-    return jsonify(res),200
+        setupNetwork.register(values)
+
+    return "OK",200
 
 
 if __name__ == '__main__':
@@ -136,18 +138,23 @@ if __name__ == '__main__':
     data.adminPort=args.admin
     #wallet.initKeys()
     print(f'My port {data.myPort} ,Admin\'s port {data.adminPort}')
+    print(f'My publicKey {data.publicKey}')
 
     if data.myPort!=data.adminPort:#expecting admin to be listening
         myInfo={
-            "nodes":[f"http://localhost:{data.myPort}"]
+            "nodes":[f"http://localhost:{data.myPort}"],
+            "publicKey":data.publicKey
         }
         kwargs = {}
         kwargs['timeout'] = 5
-        setupResponse=requests.get(f'http://localhost:{data.adminPort}/setup',json={"nodes":[f"http://localhost:{data.myPort}"]},**kwargs)
+        setupResponse=requests.get(f'http://localhost:{data.adminPort}/setup',data=myInfo,**kwargs)
         print(f"Setup Response {setupResponse}")
     else:#admin is not listening yet
-        myNode=[f"http://localhost:{data.myPort}"]
-        setupNetwork.register(myNode)
+        myInfo={
+            "nodes":[f"http://localhost:{data.myPort}"],
+            "publicKey":data.publicKey
+        }
+        setupNetwork.register(myInfo)
 
 
 
