@@ -6,6 +6,7 @@ from uuid import uuid4
 
 from flask import Flask, jsonify, request
 import requests
+import wallet
 #import flask
 
 class Blockchain:
@@ -13,6 +14,7 @@ class Blockchain:
         self.current_transactions = []
         self.chain = []
         self.nodes = set()
+        wallet.initKeys()
 
         # Create the genesis block
         self.new_block(previous_hash='1', proof=100)

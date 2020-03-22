@@ -8,6 +8,8 @@ verify_ssl = true
 [packages]
 requests = "==2.18.4"
 Flask = "==0.12.2"
+pyjsbn-rsa = "*"
+six = "*"
 
 [requires]
 python_version = "3.7"
