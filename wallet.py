@@ -2,12 +2,16 @@ import rsa
 import data
 from base64 import b64encode, b64decode
 
+# seed the pseudorandom number generator
+from random import seed
+from random import random
 
 def initKeys():
     print('[*] Generating secret, please hang on.')
-
+    seed(1)
     keysize = 2048
-    (data.publicKey, data.privateKey) = rsa.newkeys(keysize)
+    #(data.publicKey, data.privateKey) = rsa.newkeys(keysize)
+    data.publicKey=str(data.myPort)*3
 
     print(type(data.publicKey))
     '''

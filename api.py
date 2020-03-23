@@ -76,22 +76,26 @@ def full_chain():
 
 @app.route('/nodes/register', methods=['POST'])
 def register_nodes():
+    print("I am getting register request")
     values = request.get_json()
 
     nodes = values.get('nodes')
-
+    keys=values.get('publicKeys')
     if nodes is None:
         return "Error: Please supply a valid list of nodes", 400
 
-    for node in nodes:
-        blockchain.register_node(node)
+    for i in range (0,len(nodes)):
+        blockchain.register_node(nodes[i],keys[i])
+
+
 
     response = {
         'message': 'New nodes have been added',
         'total_nodes': list(blockchain.nodes),
+        'total_keys': list(blockchain.publicKeys),
     }
 
-    return jsonify(response), 201
+    return "Ok", 200
 
 @app.route('/nodes/resolve', methods=['GET'])
 def consensus():
@@ -118,8 +122,7 @@ def setup():
         res={"Message":"I Ain't admin"}
         return jsonify(res),200
     else:
-        values = request.form.to_dict()
-
+        values=request.get_json()
         res={"Message":"Wait for everybodt to start"}
         setupNetwork.register(values)
 
@@ -136,6 +139,7 @@ if __name__ == '__main__':
 
     data.myPort=port = args.port
     data.adminPort=args.admin
+    wallet.initKeys()
     #wallet.initKeys()
     print(f'My port {data.myPort} ,Admin\'s port {data.adminPort}')
     print(f'My publicKey {data.publicKey}')
@@ -147,7 +151,7 @@ if __name__ == '__main__':
         }
         kwargs = {}
         kwargs['timeout'] = 5
-        setupResponse=requests.get(f'http://localhost:{data.adminPort}/setup',data=myInfo,**kwargs)
+        setupResponse=requests.get(f'http://localhost:{data.adminPort}/setup',json=myInfo,**kwargs)
         print(f"Setup Response {setupResponse}")
     else:#admin is not listening yet
         myInfo={

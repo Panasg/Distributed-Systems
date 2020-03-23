@@ -17,7 +17,7 @@ def register(values):
     publicKey=values['publicKey']
     print(f"Type of nodes {type(nodes)}")
 
-    for node in [nodes]:
+    for node in nodes:
         tempNodes.append(node)
         print (f'Nodes so far {tempNodes}')
     tempKeys.append(publicKey)
@@ -35,9 +35,10 @@ def informEveryParticipant():
     time.sleep(2)
     kwargs = {}
     kwargs['timeout'] = 5
-    body = {"nodes":tempNodes}
+    body = {"nodes":tempNodes,
+            "publicKeys":tempKeys}
     for node in tempNodes:
         print(node+"/nodes/register")
         response=requests.post(node+"/nodes/register",json=body,**kwargs)
         print(response.status_code)
-        print(response.json)
+        print(response.text)

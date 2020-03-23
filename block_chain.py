@@ -14,16 +14,18 @@ class Blockchain:
         self.current_transactions = []
         self.chain = []
         self.nodes = set()
-        wallet.initKeys()
+        self.publicKeys=set()
+
 
         # Create the genesis block
         self.new_block(previous_hash='1', proof=100)
 
-    def register_node(self, address):
+    def register_node(self, address,key):
         """
         Add a new node to the list of nodes
         :param address: Address of node. Eg. 'http://192.168.0.5:5000'
         """
+        self.publicKeys.add(key)
         parsed_url = urlparse(address)
         if parsed_url.netloc:
             self.nodes.add(parsed_url.netloc)
@@ -32,8 +34,6 @@ class Blockchain:
             self.nodes.add(parsed_url.path)
         else:
             raise ValueError('Invalid URL')
-
-
 
     def valid_chain(self, chain):
         """
