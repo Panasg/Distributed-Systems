@@ -7,6 +7,8 @@ from uuid import uuid4
 from flask import Flask, jsonify, request
 import requests
 import wallet
+
+import data
 #import flask
 
 class Blockchain:
@@ -18,7 +20,15 @@ class Blockchain:
 
 
         # Create the genesis block
-        self.new_block(previous_hash='1', proof=0)
+        if data.myPort==data.adminPort:
+            self.current_transactions.append({
+                'sender': 0,
+                'recipient': data.publicKey,
+                'amount': 500*data.numOfParticipants,
+                'id':1
+            })
+
+            self.new_block(previous_hash='1', proof=0)#genesis block
 
     def register_node(self, address,key):
         """
@@ -121,7 +131,7 @@ class Blockchain:
         self.chain.append(block)
         return block
 
-    def new_transaction(self, sender, recipient, amount):
+    def new_transaction(self, sender, recipient, amount,id):
         """
         Creates a new transaction to go into the next mined Block
         :param sender: Address of the Sender
@@ -133,6 +143,7 @@ class Blockchain:
             'sender': sender,
             'recipient': recipient,
             'amount': amount,
+            'id':id
         })
 
         return self.last_block['index'] + 1

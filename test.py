@@ -2,7 +2,7 @@ import rsa
 import data
 from base64 import b64encode, b64decode
 import json
-
+import cryptodome
 
 
 keysize = 2048

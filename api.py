@@ -19,7 +19,7 @@ app = Flask(__name__)
 node_identifier = str(uuid4()).replace('-', '')
 
 # Instantiate the Blockchain
-blockchain
+blockchain=None
 
 
 @app.route('/mine', methods=['GET'])
@@ -72,7 +72,7 @@ def full_chain():
         'chain': blockchain.chain,
         'length': len(blockchain.chain),
     }
-    return jsonify(response), 200
+    return str(response), 200
 
 @app.route('/nodes/register', methods=['POST'])
 def register_nodes():
