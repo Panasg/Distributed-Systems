@@ -19,7 +19,7 @@ app = Flask(__name__)
 node_identifier = str(uuid4()).replace('-', '')
 
 # Instantiate the Blockchain
-blockchain = block_chain.Blockchain()
+blockchain
 
 
 @app.route('/mine', methods=['GET'])
@@ -140,6 +140,7 @@ if __name__ == '__main__':
     data.myPort=port = args.port
     data.adminPort=args.admin
     wallet.initKeys()
+    blockchain = block_chain.Blockchain()
     #wallet.initKeys()
     print(f'My port {data.myPort} ,Admin\'s port {data.adminPort}')
     print(f'My publicKey {data.publicKey}')
