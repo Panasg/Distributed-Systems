@@ -27,6 +27,7 @@ def register(values):
     if data.numOfParticipants==data.connectedParticipants:#now we must send to everyone(including admin) all nodes
         x = threading.Thread(target=informEveryParticipant)
         x.start()
+        
 
 
 

@@ -10,6 +10,12 @@ def broadcast_a_transaction(blockchain,body):
     kwargs['timeout'] = 25
     print(f"Nodes {blockchain.nodes}")
     for node in blockchain.nodes:
-        print(node+"/receiveATransaction")
-        response=requests.post("http://"+node+"/receiveATransaction",json=body,**kwargs)
-        print(response.status_code)
+        if ("localhost:"+str(data.myPort)) == node:
+            blockchain.validate_transaction(body)
+            indexOfBlock = blockchain.new_transaction(body['sender'], body['recipient'], body['amount'],body['index'])
+            print(f"Current Transactions {blockchain.current_transactions}")
+
+        else:
+            print(node+"/receiveATransaction")
+            response=requests.post("http://"+node+"/receiveATransaction",json=body,**kwargs)
+            print(response.status_code)

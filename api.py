@@ -90,6 +90,7 @@ def new_transaction():
     x.start()
 
     return "OK",200
+    x.join()
 
 
 @app.route('/chain', methods=['GET'])
