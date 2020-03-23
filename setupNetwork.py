@@ -19,9 +19,9 @@ def register(values):
 
     for node in nodes:
         tempNodes.append(node)
-        print (f'Nodes so far {tempNodes}')
+        #print (f'Nodes so far {tempNodes}')
     tempKeys.append(publicKey)
-    print(f"Keys so far {tempKeys}")
+    #print(f"Keys so far {tempKeys}")
 
     data.connectedParticipants=data.connectedParticipants+1
     if data.numOfParticipants==data.connectedParticipants:#now we must send to everyone(including admin) all nodes
@@ -34,11 +34,11 @@ def register(values):
 def informEveryParticipant():
     time.sleep(2)
     kwargs = {}
-    kwargs['timeout'] = 5
+    kwargs['timeout'] = 25
     body = {"nodes":tempNodes,
             "publicKeys":tempKeys}
     for node in tempNodes:
         print(node+"/nodes/register")
         response=requests.post(node+"/nodes/register",json=body,**kwargs)
         print(response.status_code)
-        print(response.text)
+        #print(response.text)

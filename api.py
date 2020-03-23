@@ -7,10 +7,14 @@ from uuid import uuid4
 from flask import Flask, jsonify, request
 import requests
 #import flask
+import threading
+
 import block_chain
 import data
 import setupNetwork
 import wallet
+import broadcast
+
 
 # Instantiate the Node
 app = Flask(__name__)
@@ -50,20 +54,42 @@ def mine():
     return jsonify(response), 200
 
 
-@app.route('/transactions/new', methods=['POST'])
+@app.route('/receiveATransaction', methods=['POST'])
+def receive_a_transaction():
+    values = request.get_json()
+
+    # Check that the required fields are in the POST'ed data
+    required = ['sender', 'recipient', 'amount','index']
+    if not all(k in values for k in required):
+        return 'Missing values', 400
+    # Create a new Transaction
+    blockchain.validate_transaction(values)
+
+    indexOfBlock = blockchain.new_transaction(values['sender'], values['recipient'], values['amount'],values['index'])
+    print(f"Current Transactions {blockchain.current_transactions}")
+    response = {'message': f'Transaction will be added to Block {indexOfBlock}'}
+    return str(response), 200
+
+@app.route('/newTransaction', methods=['POST'])
 def new_transaction():
     values = request.get_json()
 
     # Check that the required fields are in the POST'ed data
-    required = ['sender', 'recipient', 'amount']
+    required = [ 'recipient', 'amount']
     if not all(k in values for k in required):
         return 'Missing values', 400
 
-    # Create a new Transaction
-    index = blockchain.new_transaction(values['sender'], values['recipient'], values['amount'])
+    body={
+        'sender': data.publicKey,
+        'recipient': values['recipient'],
+        'amount': values['amount'],
+        'index':data.nextIndex
+    }
+    #data.nextIndex=data.nextIndex++
+    x = threading.Thread(target=broadcast.broadcast_a_transaction,args=(blockchain,body))
+    x.start()
 
-    response = {'message': f'Transaction will be added to Block {index}'}
-    return jsonify(response), 201
+    return "OK",200
 
 
 @app.route('/chain', methods=['GET'])
@@ -153,7 +179,7 @@ if __name__ == '__main__':
         kwargs = {}
         kwargs['timeout'] = 5
         setupResponse=requests.get(f'http://localhost:{data.adminPort}/setup',json=myInfo,**kwargs)
-        print(f"Setup Response {setupResponse}")
+        #print(f"Setup Response {setupResponse}")
     else:#admin is not listening yet
         myInfo={
             "nodes":[f"http://localhost:{data.myPort}"],

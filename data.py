@@ -4,3 +4,5 @@ numOfParticipants=3
 connectedParticipants=0
 publicKey = None
 privateKey = None
+
+nextIndex=1

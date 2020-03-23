@@ -19,16 +19,18 @@ class Blockchain:
         self.publicKeys=set()
 
 
+
         # Create the genesis block
         if data.myPort==data.adminPort:
             self.current_transactions.append({
                 'sender': 0,
                 'recipient': data.publicKey,
-                'amount': 500*data.numOfParticipants,
-                'id':1
+                'amount': 100*data.numOfParticipants,
+                'id':data.nextIndex
             })
+        data.nextIndex=data.nextIndex+1
 
-            self.new_block(previous_hash='1', proof=0)#genesis block
+        self.new_block(previous_hash='1', proof=0)#genesis block
 
     def register_node(self, address,key):
         """
@@ -145,8 +147,12 @@ class Blockchain:
             'amount': amount,
             'id':id
         })
+        data.nextIndex=id+1
 
         return self.last_block['index'] + 1
+
+    def validate_transaction(self,values):
+        return True
 
     @property
     def last_block(self):
