@@ -70,6 +70,18 @@ def receive_a_transaction():
     response = {'message': f'Transaction will be added to Block {indexOfBlock}'}
     return str(response), 200
 
+@app.route('/receiveABlock', methods=['POST'])
+def receive_a_block():
+    values = request.get_json()
+    required = ['index', 'transactions', 'timestamp','proof','previous_hash','current_hash']
+    if not all(k in values for k in required):
+        return 'Missing values', 400
+    my_block = blockchain.imported_block(values['index'], values['transactions'], values['timestamp'],values['proof'],values['previous_hash'],values['current_hash'])
+    print(f"Current Blocks {blockchain.chain}")
+    response = {'message': f'Block will be added {my_block}'}
+    return str(response), 200
+
+
 @app.route('/newTransaction', methods=['POST'])
 def new_transaction():
     values = request.get_json()
@@ -151,7 +163,7 @@ def setup():
     else:
         values=request.get_json()
         res={"Message":"Wait for everybodt to start"}
-        setupNetwork.register(values)
+        setupNetwork.register(values,blockchain)
 
     return "OK",200
 
@@ -186,7 +198,7 @@ if __name__ == '__main__':
             "nodes":[f"http://localhost:{data.myPort}"],
             "publicKey":data.publicKey
         }
-        setupNetwork.register(myInfo)
+        setupNetwork.register(myInfo,blockchain)
 
 
 

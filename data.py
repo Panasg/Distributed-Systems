@@ -4,5 +4,5 @@ numOfParticipants=3
 connectedParticipants=0
 publicKey = None
 privateKey = None
-
+capacity=3
 nextIndex=1

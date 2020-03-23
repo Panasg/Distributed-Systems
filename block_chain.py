@@ -28,9 +28,9 @@ class Blockchain:
                 'amount': 100*data.numOfParticipants,
                 'id':data.nextIndex
             })
-        data.nextIndex=data.nextIndex+1
+            data.nextIndex=data.nextIndex+1
+            self.new_block(previous_hash='1', proof=0)#genesis block
 
-        self.new_block(previous_hash='1', proof=0)#genesis block
 
     def register_node(self, address,key):
         """
@@ -46,6 +46,7 @@ class Blockchain:
             self.nodes.add(parsed_url.path)
         else:
             raise ValueError('Invalid URL')
+
 
     def valid_chain(self, chain):
         """
@@ -130,6 +131,19 @@ class Blockchain:
         # Reset the current list of transactions
         self.current_transactions = []
 
+        self.chain.append(block)
+        return block
+
+    def imported_block(self, index, transactions,timestamp,proof,previous_hash,current_hash):
+        block = {
+            'index': index,
+            'timestamp': timestamp,
+            'transactions': transactions,
+            'proof': proof,
+            'previous_hash': previous_hash ,
+            'current_hash':current_hash
+        }
+        self.current_transactions = []
         self.chain.append(block)
         return block
 
