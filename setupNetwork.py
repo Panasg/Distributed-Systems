@@ -47,4 +47,12 @@ def informEveryParticipant():
         response=requests.post(node+"/nodes/register",json=body,**kwargs)
         print(response.status_code)
     broadcast.broadcast_a_block(genesis_block,my_chain)
+    #print (my_chain.nodes)
+    # print(my_chain.publicKeys)
+
+    for key in my_chain.publicKeys:
+        if key!=data.publicKey:
+            trans_body = {"recipient":key,"amount":100}
+            response=requests.post('http://localhost:'+str(data.myPort)+'/newTransaction',json=trans_body,**kwargs)
+
         #print(response.text)
