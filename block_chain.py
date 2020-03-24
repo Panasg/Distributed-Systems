@@ -131,7 +131,7 @@ class Blockchain:
             'id':id
         })
         data.nextIndex=id+1
-
+        
         return self.last_block['index'] + 1
 
     def validate_transaction(self,values):
