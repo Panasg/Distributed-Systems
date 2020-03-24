@@ -6,3 +6,4 @@ publicKey = None
 privateKey = None
 capacity=3
 nextIndex=1
+temp_nextIndex=2

@@ -95,14 +95,17 @@ def new_transaction():
         'sender': data.publicKey,
         'recipient': values['recipient'],
         'amount': values['amount'],
-        'index':data.nextIndex
+        'index':max(data.nextIndex,data.temp_nextIndex)
     }
+    data.temp_nextIndex=max(data.nextIndex,data.temp_nextIndex)+1
     #data.nextIndex=data.nextIndex++
+
     x = threading.Thread(target=broadcast.broadcast_a_transaction,args=(blockchain,body))
     x.start()
 
     return "OK",200
     x.join()
+
 
 
 @app.route('/chain', methods=['GET'])
