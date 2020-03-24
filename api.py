@@ -8,7 +8,7 @@ from flask import Flask, jsonify, request
 import requests
 #import flask
 import threading
-
+import utilities
 import block_chain
 import data
 import setupNetwork
@@ -31,16 +31,6 @@ def mine():
     # We run the proof of work algorithm to get the next proof...
     last_block = blockchain.last_block
     proof = blockchain.proof_of_work(last_block)
-
-    # We must receive a reward for finding the proof.
-    # The sender is "0" to signify that this node has mined a new coin.
-    blockchain.new_transaction(
-        sender="0",
-        recipient=node_identifier,
-        amount=1,
-    )
-
-    # Forge the new Block by adding it to the chain
     previous_hash = blockchain.hash(last_block)
     block = blockchain.new_block(proof, previous_hash)
 
@@ -51,7 +41,7 @@ def mine():
         'proof': block['proof'],
         'previous_hash': block['previous_hash'],
     }
-    return jsonify(response), 200
+    return str(response), 200
 
 
 @app.route('/receiveATransaction', methods=['POST'])
@@ -68,7 +58,14 @@ def receive_a_transaction():
     indexOfBlock = blockchain.new_transaction(values['sender'], values['recipient'], values['amount'],values['index'])
     print(f"Current Transactions {blockchain.current_transactions}")
     response = {'message': f'Transaction will be added to Block {indexOfBlock}'}
+    flag=False
+    if len(blockchain.current_transactions)==data.capacity:
+        x = threading.Thread(target=utilities.StartMining)
+        x.start()
+        flag=True
     return str(response), 200
+    if flag==True:
+        x.join()
 
 @app.route('/receiveABlock', methods=['POST'])
 def receive_a_block():
