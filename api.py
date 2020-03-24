@@ -39,7 +39,6 @@ def mine():
 
     block = blockchain.new_block(proof, previous_hash,transactions)
 
-    self.current_transactions = []
     response = {
         'message': "New Block Forged",
         'index': block['index'],
@@ -151,15 +150,15 @@ def consensus():
             'message': 'Our chain was replaced',
             'new_chain': blockchain.chain
         }
-        status=500#replaced
+        status_code=500#replaced
     else:
         response = {
             'message': 'Our chain is authoritative',
             'chain': blockchain.chain
         }
-        status=200#not replaced
+        status_code=200#not replaced
 
-    return jsonify(response), status
+    return jsonify(response), status_code
 
 
 @app.route('/setup', methods=['GET'])
