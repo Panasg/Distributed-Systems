@@ -19,4 +19,5 @@ import broadcast
 def StartMining():
     kwargs = {}
     kwargs['timeout'] = 25
+    response=requests.get("http://localhost:"+str(data.myPort)+"/nodes/resolve")
     response=requests.get('http://localhost:'+str(data.myPort)+'/mine',**kwargs)

@@ -30,10 +30,16 @@ blockchain=None
 def mine():
     # We run the proof of work algorithm to get the next proof...
     last_block = blockchain.last_block
+
+    transactions=self.current_transactions
+    self.current_transactions=[]
     proof = blockchain.proof_of_work(last_block)
     previous_hash = blockchain.hash(last_block)
-    block = blockchain.new_block(proof, previous_hash)
 
+
+    block = blockchain.new_block(proof, previous_hash,transactions)
+
+    self.current_transactions = []
     response = {
         'message': "New Block Forged",
         'index': block['index'],
@@ -145,13 +151,15 @@ def consensus():
             'message': 'Our chain was replaced',
             'new_chain': blockchain.chain
         }
+        status=500#replaced
     else:
         response = {
             'message': 'Our chain is authoritative',
             'chain': blockchain.chain
         }
+        status=200#not replaced
 
-    return jsonify(response), 200
+    return jsonify(response), status
 
 
 @app.route('/setup', methods=['GET'])

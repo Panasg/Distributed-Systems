@@ -29,7 +29,7 @@ class Blockchain:
                 'id':data.nextIndex
             })
             data.nextIndex=data.nextIndex+1
-            self.new_block(previous_hash='1', proof=0)#genesis block
+            self.new_block(previous_hash='1', proof=0,transactions=self.current_transactions)#genesis block
 
 
     def register_node(self, address,key):
@@ -93,11 +93,11 @@ class Blockchain:
 
         return False
 
-    def new_block(self, proof, previous_hash):
+    def new_block(self, proof, previous_hash,transactions):
         block = {
             'index': len(self.chain) + 1,
             'timestamp': time(),
-            'transactions': self.current_transactions,
+            'transactions': transactions,
             'proof': proof,
             'previous_hash': previous_hash or self.hash(self.chain[-1]),
             'current_hash':"string"
@@ -105,9 +105,16 @@ class Blockchain:
         block['current_hash']=self.hash(block)
 
         # Reset the current list of transactions
-        self.current_transactions = []
+        if(len(self.chain)==0 and data.myPort==data.adminPort):
+            self.chain.append(block)
+            return block
 
-        self.chain.append(block)
+
+        response=requests.get("http://localhost:"+str(data.myPort)+"/nodes/resolve")
+        #self.current_transactions = []
+        if(response.status_code==200):
+            self.chain.append(block)#mpainei sthn lista mas
+            broadcast.broadcast_a_block(block,self)
         return block
 
     def imported_block(self, index, transactions,timestamp,proof,previous_hash,current_hash):
@@ -131,7 +138,7 @@ class Blockchain:
             'id':id
         })
         data.nextIndex=id+1
-        
+
         return self.last_block['index'] + 1
 
     def validate_transaction(self,values):
