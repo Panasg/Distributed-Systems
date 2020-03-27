@@ -1,4 +1,4 @@
-import rsa
+#import rsa
 import data
 from base64 import b64encode, b64decode
 
@@ -11,9 +11,9 @@ def initKeys():
     seed(1)
     keysize = 2048
     #(data.publicKey, data.privateKey) = rsa.newkeys(keysize)
-    data.publicKey=str(data.myPort)*3
+    with data.lock:
+        data.publicKey=str(data.myPort)*3
 
-    print(type(data.publicKey))
     '''
     signature = b64encode(rsa.sign(msg1.encode(), private, "SHA-512"))
     verify = rsa.verify(msg1.encode(), b64decode(signature), public)

@@ -13,23 +13,9 @@ import data
 
 class Blockchain:
     def __init__(self):
-        self.current_transactions = []
+
         self.chain = []
-        self.nodes = []
-        self.publicKeys=[]
-
-
-
-        # Create the genesis block
-        if data.myPort==data.adminPort:
-            self.current_transactions.append({
-                'sender': 0,
-                'recipient': data.publicKey,
-                'amount': 100*data.numOfParticipants,
-                'id':data.nextIndex
-            })
-            data.nextIndex=data.nextIndex+1
-            self.new_block(previous_hash='1', proof=0,transactions=self.current_transactions)#genesis block
+            
 
 
     def register_node(self, address,key):

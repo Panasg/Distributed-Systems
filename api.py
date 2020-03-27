@@ -6,7 +6,11 @@ from uuid import uuid4
 from flask import Flask, jsonify, request
 import requests
 import threading
+
+import block_chain
 import data
+import wallet
+import setupNetwork
 
 # Instantiate the Node
 app = Flask(__name__)
@@ -47,16 +51,14 @@ def register_nodes():
     print("I am getting register request")
     values = request.get_json()
 
-    nodes = values.get('nodes')
-    keys=values.get('publicKeys')
-    if nodes is None:
-        return "Error: Please supply a valid list of nodes", 400
+    setupNetwork.saveNodes(values)
+    return "ok",200
 
-    for i in range (0,len(nodes)):
-        data.blockchain.register_node(nodes[i],keys[i])
+
 
 @app.route('/view_transactions', methods=['GET'])
-def view_transactions()
+def view_transactions():
+    return
 
 @app.route('/setup', methods=['GET'])
 def setup():
@@ -66,8 +68,8 @@ def setup():
         return jsonify(res),200
     else:
         values=request.get_json()
-        res={"Message":"Wait for everybodt to start"}
-        setupNetwork.register(values,data.blockchain)
+        res={"Message":"Wait for everybody to start"}
+        setupNetwork.register(values)
 
     return "OK",200
 
@@ -82,27 +84,26 @@ if __name__ == '__main__':
 
     data.myPort=port = args.port
     data.adminPort=args.admin
-    #wallet.initKeys()
+    data.myUrl=f"http://localhost:{data.myPort}"
+    wallet.initKeys()
+
     data.blockchain = block_chain.Blockchain()
-    #wallet.initKeys()
+
     print(f'My port {data.myPort} ,Admin\'s port {data.adminPort}')
     print(f'My publicKey {data.publicKey}')
 
+
+    myInfo={
+        "url":f"http://localhost:{data.myPort}",
+        "publicKey":data.publicKey
+    }
     if data.myPort!=data.adminPort:#expecting admin to be listening
-        myInfo={
-            "nodes":[f"http://localhost:{data.myPort}"],
-            "publicKey":data.publicKey
-        }
         kwargs = {}
         kwargs['timeout'] = 5
         setupResponse=requests.get(f'http://localhost:{data.adminPort}/setup',json=myInfo,**kwargs)
         #print(f"Setup Response {setupResponse}")
     else:#admin is not listening yet
-        myInfo={
-            "nodes":[f"http://localhost:{data.myPort}"],
-            "publicKey":data.publicKey
-        }
-        setupNetwork.register(myInfo,data.blockchain)
+        setupNetwork.register(myInfo)
 
 
 
