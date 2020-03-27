@@ -1,16 +1,7 @@
 import utilities
-
-import time
-
-t = time.localtime()
-current_time = time.strftime("%H:%M:%S", t)
+import transaction
 
 
-dicti={
-    "name":'kalhmera',
-    "amout":2,
-    "timestamp":current_time
-}
-
+genTrans =  transaction
 
 print(utilities.hashStringToString(str(dicti)))

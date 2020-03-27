@@ -91,7 +91,7 @@ if __name__ == '__main__':
 
     print(f'My port {data.myPort} ,Admin\'s port {data.adminPort}')
     print(f'My publicKey {data.publicKey}')
-
+    
 
     myInfo={
         "url":f"http://localhost:{data.myPort}",

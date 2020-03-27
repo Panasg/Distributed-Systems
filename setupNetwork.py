@@ -1,10 +1,14 @@
-import data
 from flask import Flask, jsonify, request
 import requests
 import json
 import threading
 import time
 #import broadcast
+
+import transaction
+import block
+import data
+
 
 tempNodes=[]
 tempKeys=[]
@@ -46,6 +50,11 @@ def informEveryParticipant():#only executed by admin
         body["yourId"]=i
         response=requests.post(tempNodes[i]+"/nodes/register",json=body,**kwargs)
 
+
+    genTrans=transaction.createGenesisTransaction()
+    print (genTrans.asDictionary())
+    genBlock=block.createGenesisBlock([genTrans])
+    print (genBlock.asDictionary())
     return
 
     broadcast.broadcast_a_block(genesis_block,my_chain)
@@ -61,6 +70,6 @@ def saveNodes(values):#executed by every participant
     data.allpublicKeys=values.get('publicKeys')
     data.id=values.get('yourId')
 
-    print(data.allUrls,data.allpublicKeys,data.id)
+    print("My id is "+str(data.id))
 
     return
