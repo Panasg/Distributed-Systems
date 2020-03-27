@@ -56,7 +56,6 @@ class Blockchain:
         blockAsList=[]
         for bl in self.chain:
             blockAsList.append(bl.asDictionary())
-        print ("my chain:")
         print (blockAsList)
 
 

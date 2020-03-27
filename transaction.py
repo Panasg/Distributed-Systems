@@ -61,7 +61,11 @@ def new_transaction(self, sender, recipient, amount,id):
 
 def validate_transaction(self,values):
     return True
+
 '''
+def createTranasactionFromDictionary(dictionary):
+    b=dictionary
+    return transaction(b['sender'], b['recipient'], b['amount'],b['timestamp'], b['inputs'],b['outputs'], b['id'], b['signature'])
 
 def createGenesisTransaction():#mono o admin to ektelei
 

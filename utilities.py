@@ -43,9 +43,9 @@ def asObject(a_dictionary,kind):
         temp_trans_list=[]
         for trans_dict in a_dictionary['transactions']:
             temp_trans_list.append(asObject(trans_dict,"transaction"))
-        tempBlock=block(b['index'], b['timestamp'],temp_trans_list ,b['nonce'], b['current_hash'], ['previous_hash'])
+        tempBlock=block.block(b['index'], b['timestamp'],temp_trans_list ,b['nonce'], b['current_hash'], b['previous_hash'])
         return tempBlock
-    return transaction(b['self'],b['sender'], b['recipient'], b['amount'],b['timestamp'], b['inputs'],b['outputs'], b['id'], b['signature'])
+    return transaction.transaction(b['sender'], b['recipient'], b['amount'],b['timestamp'], b['inputs'],b['outputs'], b['id'], b['signature'])
 
 
 

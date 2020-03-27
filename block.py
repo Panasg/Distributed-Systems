@@ -6,6 +6,7 @@ import threading
 
 import data
 import utilities
+import transaction
 
 class block:
 
@@ -74,11 +75,19 @@ def new_block(self, proof, previous_hash,transactions):
         broadcast.broadcast_a_block(block,self)
     return block
 '''
+def createBlockFromDictionary(dictionary):
+    temp_trans_list=[]
+    for trans_dict in a_dictionary['transactions']:
+        temp_trans_list.append(transaction.createTranasactionFromDictionary(trans_dict))
+    tempBlock= block(b['index'], b['timestamp'],temp_trans_list ,b['nonce'], b['current_hash'], b['previous_hash'])
+    return tempBlock
+
+    return transaction(b['sender'], b['recipient'], b['amount'],b['timestamp'], b['inputs'],b['outputs'], b['id'], b['signature'])
 
 def createGenesisBlock(transactions):#mono o admin to ektelei
 
     timestamp=time()
-    genBlock=block(0,time(),transactions,0,"1",1)
+    genBlock= block(0,time(),transactions,0,"1",1)
     genBlock.current_hash= genBlock.hash()
 
     return genBlock
