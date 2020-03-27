@@ -22,9 +22,9 @@ def broadcast_a_transaction(blockchain,body):
         response=requests.post("http://"+node+"/receiveATransaction",json=body,**kwargs)
         print(response.status_code)
 
-def broadcast_a_block(block,blockchain):
+def broadcast_a_block(block):
     kwargs = {}
     kwargs['timeout'] = 25
-    for node in blockchain.nodes:
-        response=requests.post("http://"+node+"/receiveABlock",json=block,**kwargs)
-        print(response.status_code)
+    for node in data.allUrls:
+        response=requests.post(node+"/receiveABlock",json=block.asDictionary(),**kwargs)
+        #print(response.status_code)

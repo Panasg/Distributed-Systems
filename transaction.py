@@ -47,6 +47,21 @@ class transaction:
 
 
 
+'''
+def new_transaction(self, sender, recipient, amount,id):
+    self.current_transactions.append({
+        'sender': sender,
+        'recipient': recipient,
+        'amount': amount,
+        'id':id
+    })
+    data.nextIndex=id+1
+
+    return self.last_block['index'] + 1
+
+def validate_transaction(self,values):
+    return True
+'''
 
 def createGenesisTransaction():#mono o admin to ektelei
 

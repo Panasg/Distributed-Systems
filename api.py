@@ -6,12 +6,12 @@ from uuid import uuid4
 from flask import Flask, jsonify, request
 import requests
 import threading
-
+import transaction
 import block_chain
 import data
 import wallet
 import setupNetwork
-
+import utilities
 # Instantiate the Node
 app = Flask(__name__)
 
@@ -22,11 +22,16 @@ def receive_transaction():
 @app.route('/receiveABlock', methods=['POST'])
 def receive_a_block():
     values = request.get_json()
-    required = ['index', 'transactions', 'timestamp','proof','previous_hash','current_hash']
+    print (values)
+    required = ['index', 'transactions', 'timestamp','nonce','previous_hash','current_hash']
     if not all(k in values for k in required):
         return 'Missing values', 400
-    my_block = blockchain.imported_block(values['index'], values['transactions'], values['timestamp'],values['proof'],values['previous_hash'],values['current_hash'])
-    print(f"Current Blocks {data.blockchain.chain}")
+    my_block=utilities.asObject(values,'block')
+    print("my received block:")
+    print(my_block.asDictionary())
+    with data.lock:
+        data.blockchain.chain.append(my_block)
+    print(f"Current Blocks {data.blockchain.print_chain()}")
     response = {'message': f'Block will be added {my_block}'}
     return str(response), 200
 
@@ -89,9 +94,9 @@ if __name__ == '__main__':
 
     data.blockchain = block_chain.Blockchain()
 
-    print(f'My port {data.myPort} ,Admin\'s port {data.adminPort}')
-    print(f'My publicKey {data.publicKey}')
-    
+    #print(f'My port {data.myPort} ,Admin\'s port {data.adminPort}')
+    #print(f'My publicKey {data.publicKey}')
+
 
     myInfo={
         "url":f"http://localhost:{data.myPort}",

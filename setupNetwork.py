@@ -52,9 +52,11 @@ def informEveryParticipant():#only executed by admin
 
 
     genTrans=transaction.createGenesisTransaction()
-    print (genTrans.asDictionary())
+    #print (genTrans.asDictionary())
     genBlock=block.createGenesisBlock([genTrans])
-    print (genBlock.asDictionary())
+    broadcast.broadcast_a_block(genBlock)
+    data.blockchain.print_chain()
+    #print (genBlock.asDictionary())
     return
 
     broadcast.broadcast_a_block(genesis_block,my_chain)

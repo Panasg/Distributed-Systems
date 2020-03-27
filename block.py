@@ -49,8 +49,31 @@ class block:
         }
         return tempDict
 
+'''
+def new_block(self, proof, previous_hash,transactions):
+    block = {
+        'index': len(self.chain) + 1,
+        'timestamp': time(),
+        'transactions': transactions,
+        'proof': proof,
+        'previous_hash': previous_hash or self.hash(self.chain[-1]),
+        'current_hash':"string"
+    }
+    block['current_hash']=self.hash(block)
+
+    # Reset the current list of transactions
+    if(len(self.chain)==0 and data.myPort==data.adminPort):
+        self.chain.append(block)
+        return block
 
 
+    response=requests.get("http://localhost:"+str(data.myPort)+"/nodes/resolve")
+    #self.current_transactions = []
+    if(response.status_code==200):
+        self.chain.append(block)#mpainei sthn lista mas
+        broadcast.broadcast_a_block(block,self)
+    return block
+'''
 
 def createGenesisBlock(transactions):#mono o admin to ektelei
 
