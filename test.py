@@ -1,7 +1,15 @@
-import utilities
-import transaction
+
+def getListOfKeys(dict):
+    list = []
+    for key in dict.keys():
+        list.append(key)
+
+    return list
 
 
-genTrans =  transaction
+dict={
+    
+}
 
-print(utilities.hashStringToString(str(dicti)))
+
+print(getListOfKeys(dict))

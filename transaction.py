@@ -75,12 +75,39 @@ class transaction:
             print(f'verify_signature: {e.__class__.__name__}: {e}')
             return False
 
-    def validate_transaction(self):
-        try:
+    def validate_transaction(self):#validates a trans and changes our current state
+        try:                       #true trans is valid , flase trans not valid
             with data.lock:
                 if not data.hasReceivedGenesisBlock:
-                    (data.utxos[0])[self.id]=self.amount
+                    data.utxos[0][self.id]=self.amount
                     data.hasReceivedGenesisBlock=True
+                    return true
+                else:
+                    indexOfSender=data.allPublicKeys.index(self.sender)
+                    indexOfRecipient=data.allPublicKeys.index(self.recipient)
+
+                    safeCopyOfUtxosSender=copy.deepcopy(data.utxos[indexOfSender])#θα δουλευουμε σε αντιγραφα ωστε αν κατι παει λαθος αν μην χαλασει τα δεδομενα μας
+                    safeCopyOfUtxosRecipient=copy.deepcopy(data.utxos[indexOfRecipient])
+                    allMoney=0
+
+                    for transId in self.inputs:
+                        if transId in safeCopyOfUtxosSender:
+                            allMoney=allMoney+ safeCopyOfUtxosSender[transId]#παιρνουμε τα λεφτα που πηρε απο εκεινο το trans
+                            safeCopyOfUtxosSender.pop(transId)#το αφαιρουμε για να μην τα ξαναμετρησουμε
+                        else:
+                            print("A past transaction was no found")
+                            return False
+
+                    if(allMoney<self.amount):
+                        print("Not enough Money")
+                        return False
+                    #δεν πηγε κατι λαθος, παιρνει ο καθενας τα λεφτα του και ολοι ειμαστε μια χαρα
+                    safeCopyOfUtxosSender[self.id]=allMoney-self.amount #ο sender παιρνει τα ρεστα του
+                    safeCopyOfUtxosRecipient[self.id]=self.amount
+                    data.utxos[indexOfSender]=safeCopyOfUtxosSender
+                    data.utxos[indexOfRecipient]=safeCopyOfUtxosRecipient
+                    return True
+
         except Exception as e:
             print(f'validate_transaction: {e.__class__.__name__}: {e}')
             return False
@@ -102,11 +129,12 @@ def new_transaction(self, sender, recipient, amount,id):
 def createTranasactionFromDictionary(dictionary):
     b=dictionary
     return transaction(b['sender'], b['recipient'], b['amount'],b['timestamp'], b['inputs'],b['outputs'], b['id'], b['signature'])
+
 def create_transaction(rec_address,amount):
-    #print(type(rec_address))
-    #print(type(amount))
-    #print(data.allPublicKeys)
-    new_trans=transaction(data.publicKey,data.allPublicKeys[rec_address],amount,time(),[],[])
+    inputs=utilities.getListOfKeys( data.utxos[id]  )# για input βαζουμε ο,τι συναλλαγη εχω στο ονομα μου
+
+    new_trans=transaction(data.publicKey,data.allPublicKeys[rec_address],amount,time(),inputs,[])
+
     new_trans.id=new_trans.calculateId()
     new_trans.sign()
     return new_trans

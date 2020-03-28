@@ -28,6 +28,10 @@ def receive_transaction():
     trans_obj=utilities.asObject(values,"transaction")
     #print("BEFORE SIGNATURE")
     trans_obj.verify_signature()
+    retValue=trans_obj.validate_transaction()
+    if(retValue):
+        with data.lock:
+            data.current_transactions.append(trans_obj)
     #print("AFTER SIGNATURE")
     return "transaction recieved",200
     #trans_obj.validate()

@@ -48,7 +48,12 @@ def asObject(a_dictionary,kind):
     return transaction.transaction(b['sender'], b['recipient'], b['amount'],b['timestamp'], b['inputs'],b['outputs'], b['id'], b['signature'])
 
 
+def getListOfKeys(dict):#παιρνει dict και γυρνα λιστα με ολα τα κλειδια του
+    list = []
+    for key in dict.keys():
+        list.append(key)
 
+    return list
 
 '''
 def proof_of_work(self, last_block):
