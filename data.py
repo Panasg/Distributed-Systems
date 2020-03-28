@@ -14,7 +14,8 @@ current_transactions={}#dictionary gia na briskoyme me bash to trans_id
 
 allUrls=[]
 allPublicKeys=[]
-
+utxos=[]
+hasReceivedGenesisBlock=False
 connectedParticipants=0
 
 #aytes tis allazoyme gia na parametropoihsoyme to systhma mas

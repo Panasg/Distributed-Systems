@@ -18,8 +18,19 @@ app = Flask(__name__)
 
 @app.route('/receive_transaction', methods=['POST'])
 def receive_transaction():
-    return
 
+    values=request.get_json()
+    required = ['sender', 'recipient', 'amount','timestamp', 'inputs','outputs', 'id', 'signature']
+    if not all(k in values for k in required):
+
+        return 'Missing values', 400
+
+    trans_obj=utilities.asObject(values,"transaction")
+    #print("BEFORE SIGNATURE")
+    trans_obj.verify_signature()
+    #print("AFTER SIGNATURE")
+    return "transaction recieved",200
+    #trans_obj.validate()
 @app.route('/receiveABlock', methods=['POST'])
 def receive_a_block():
     values = request.get_json()
@@ -29,16 +40,11 @@ def receive_a_block():
 
     my_block=utilities.asObject(values,'block')
 
-    #print("What i got")
-    #print(values)
-
-    #print("What i created")
-    #print(my_block.asDictionary())
-
-    #print(f"Block hashes {my_block.hash()} {my_block.current_hash}")
-
     with data.lock:
+        for transaction in my_block.transactions:
+            transaction.validate_transaction()
         data.blockchain.chain.append(my_block)
+    print(data.utxos)
     print(f"Current Blocks :")
     data.blockchain.print_chain()
 

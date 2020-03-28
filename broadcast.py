@@ -13,9 +13,9 @@ def broadcast_transaction(new_trans):
     #print(trans_dict)
     for node in data.allUrls:
         #print(node+"/receiveATransaction")
-        response=requests.post(node+"/receiveATransaction",json=trans_dict,**kwargs)
+        response=requests.post(node+"/receive_transaction",json=trans_dict,**kwargs)
         #print(response.status_code)
-        print ("time to reciece the transaction")
+        print ("time to recieve the transaction")
 
 
 def broadcast_a_block(block):

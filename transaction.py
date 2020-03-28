@@ -61,18 +61,29 @@ class transaction:
 
 
     def verify_signature(self):
-        '''verify the signature of an incoming transaction'''
-        try:
-            rsa_key = RSA.importKey(self.sender.encode())
-            verifier = PKCS1_v1_5.new(rsa_key)
 
-            hash_obj = self.calculate_hash()
-            return verifier.verify(hash_obj, base64.b64decode(self.signature))
+        try:
+            if self.id != self.calculateId():
+                return False
+            rsa_key1 = RSA.importKey(self.sender)
+            signedId=SHA384.new(self.id.encode())
+            verifier = PKCS1_v1_5.new(rsa_key1)
+            ver= verifier.verify(signedId, base64.b64decode(self.signature))
+            print(f"verifier {ver}")
+            return ver
         except Exception as e:
             print(f'verify_signature: {e.__class__.__name__}: {e}')
             return False
 
-
+    def validate_transaction(self):
+        try:
+            with data.lock:
+                if not data.hasReceivedGenesisBlock:
+                    (data.utxos[0])[self.id]=self.amount
+                    data.hasReceivedGenesisBlock=True
+        except Exception as e:
+            print(f'validate_transaction: {e.__class__.__name__}: {e}')
+            return False
 
 '''
 def new_transaction(self, sender, recipient, amount,id):

@@ -72,7 +72,8 @@ def saveNodes(values):#executed by every participant
     data.allUrls=values['nodes']
     data.allPublicKeys=values['publicKeys']
     data.id=values['yourId']
-
+    for i in range (0,len(data.allUrls)):
+        data.utxos.append({})
     print("My id is "+str(data.id))
 
     return
