@@ -82,7 +82,7 @@ def createBlockFromDictionary(dictionary):
     tempBlock= block(b['index'], b['timestamp'],temp_trans_list ,b['nonce'], b['current_hash'], b['previous_hash'])
     return tempBlock
 
-    return transaction(b['sender'], b['recipient'], b['amount'],b['timestamp'], b['inputs'],b['outputs'], b['id'], b['signature'])
+    
 
 def createGenesisBlock(transactions):#mono o admin to ektelei
 
