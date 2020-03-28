@@ -3,7 +3,10 @@ from flask import Flask, jsonify, request
 import requests
 import json
 import threading
-
+from Crypto.Hash import SHA384
+from Crypto.PublicKey import RSA
+from Crypto.Signature import PKCS1_v1_5
+import base64
 import data
 import utilities
 
@@ -47,6 +50,30 @@ class transaction:
 
 
 
+
+    def sign(self):
+        rsa_key = RSA.importKey(data.privateKey) # δημιουργία αντικειμένου τύπου κλειδιού
+        signer = PKCS1_v1_5.new(rsa_key) # δημιουργία του υπογραφέα
+        signedId=SHA384.new(self.id.encode()) # αντικείμενο πρός υπογραφή
+        self.signature = base64.b64encode(signer.sign(signedId)).decode() # υπογραφή
+
+
+
+
+    def verify_signature(self):
+        '''verify the signature of an incoming transaction'''
+        try:
+            rsa_key = RSA.importKey(self.sender.encode())
+            verifier = PKCS1_v1_5.new(rsa_key)
+
+            hash_obj = self.calculate_hash()
+            return verifier.verify(hash_obj, base64.b64decode(self.signature))
+        except Exception as e:
+            print(f'verify_signature: {e.__class__.__name__}: {e}')
+            return False
+
+
+
 '''
 def new_transaction(self, sender, recipient, amount,id):
     self.current_transactions.append({
@@ -59,13 +86,19 @@ def new_transaction(self, sender, recipient, amount,id):
 
     return self.last_block['index'] + 1
 
-def validate_transaction(self,values):
-    return True
 
 '''
 def createTranasactionFromDictionary(dictionary):
     b=dictionary
     return transaction(b['sender'], b['recipient'], b['amount'],b['timestamp'], b['inputs'],b['outputs'], b['id'], b['signature'])
+def create_transaction(rec_address,amount):
+    #print(type(rec_address))
+    #print(type(amount))
+    #print(data.allPublicKeys)
+    new_trans=transaction(data.publicKey,data.allPublicKeys[rec_address],amount,time(),[],[])
+    new_trans.id=new_trans.calculateId()
+    new_trans.sign()
+    return new_trans
 
 def createGenesisTransaction():#mono o admin to ektelei
 

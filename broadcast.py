@@ -5,22 +5,18 @@ import json
 import threading
 import time
 
-def broadcast_a_transaction(blockchain,body):
+
+def broadcast_transaction(new_trans):
     kwargs = {}
     kwargs['timeout'] = 25
-    print(f"Nodes {blockchain.nodes}")
-    for node in blockchain.nodes:
-        '''
-        if ("localhost:"+str(data.myPort)) == node:
-            blockchain.validate_transaction(body)
-            indexOfBlock = blockchain.new_transaction(body['sender'], body['recipient'], body['amount'],body['index'])
-            print(f"Current Transactions {blockchain.current_transactions}")
+    trans_dict=new_trans.asDictionary()
+    #print(trans_dict)
+    for node in data.allUrls:
+        #print(node+"/receiveATransaction")
+        response=requests.post(node+"/receiveATransaction",json=trans_dict,**kwargs)
+        #print(response.status_code)
+        print ("time to reciece the transaction")
 
-        else:
-        '''
-        print(node+"/receiveATransaction")
-        response=requests.post("http://"+node+"/receiveATransaction",json=body,**kwargs)
-        print(response.status_code)
 
 def broadcast_a_block(block):
     kwargs = {}

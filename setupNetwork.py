@@ -68,9 +68,10 @@ def informEveryParticipant():#only executed by admin
             response=requests.post('http://localhost:'+str(data.myPort)+'/newTransaction',json=trans_body,**kwargs)
 
 def saveNodes(values):#executed by every participant
-    data.allUrls=values.get('nodes')
-    data.allpublicKeys=values.get('publicKeys')
-    data.id=values.get('yourId')
+    #print(values)
+    data.allUrls=values['nodes']
+    data.allPublicKeys=values['publicKeys']
+    data.id=values['yourId']
 
     print("My id is "+str(data.id))
 

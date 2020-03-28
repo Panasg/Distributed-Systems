@@ -6,7 +6,7 @@ from uuid import uuid4
 from flask import Flask, jsonify, request
 import requests
 import threading
-
+import broadcast
 import transaction
 import block_chain
 import data
@@ -29,13 +29,13 @@ def receive_a_block():
 
     my_block=utilities.asObject(values,'block')
 
-    print("What i got")
-    print(values)
+    #print("What i got")
+    #print(values)
 
-    print("What i created")
-    print(my_block.asDictionary())
+    #print("What i created")
+    #print(my_block.asDictionary())
 
-    print(f"Block hashes {my_block.hash()} {my_block.current_hash}")
+    #print(f"Block hashes {my_block.hash()} {my_block.current_hash}")
 
     with data.lock:
         data.blockchain.chain.append(my_block)
@@ -45,8 +45,16 @@ def receive_a_block():
     return "Ok", 200
 
 @app.route('/new_transaction', methods=['POST'])
-def create_transaction():
-    return
+def new_transaction():
+    values = request.get_json()
+    required = ['recipient_address', 'amount']
+    if not all(k in values for k in required):
+        return 'Missing values', 400
+    new_trans=transaction.create_transaction(values['recipient_address'],values['amount'])
+    broadcast.broadcast_transaction(new_trans)
+    return "Transaction sent",200
+
+
 
 @app.route('/chain', methods=['GET'])
 def full_chain():
