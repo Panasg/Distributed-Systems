@@ -75,6 +75,21 @@ def receive_a_block():
             transaction.validate_transaction()
         data.blockchain.chain.append(my_block)
     print(data.utxos)
+
+    # to hash einai ypologismeno swsta
+
+    # to hash exei thn swsth morfh
+
+    #1h to hash einai idio me to prohgoymeno hash, shmainei pws oi alysides symfvnoyn
+        #pairnoyme ta utxos opws htan sto prohgoymeno block
+        #kanoyme ena ena validate ta transactions san na ta vlepoyme prwth fora
+        #afairoyme osa exoyme koina sto current_transactions
+    #2h to hash yparxei pio ba8eia sthn oyra
+        #den kanoyme kati to aporriptoyme
+    #3h to previous hash den yparxei mesa sthn lista mas
+            #consensus
+            #an petyxei parnoyme chain, trans kai uxos
+
     #print(f"Current Blocks :")
     #data.blockchain.print_chain()
 

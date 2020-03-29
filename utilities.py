@@ -106,7 +106,7 @@ def valid_chain(chain):
 
     i=0
     for block in tempChain[1:]:
-        i++
+        i=i+1
         if not mining.valid_proof(block):
             return False
         if block.previous_hash!=tempChain[i-1].current_hash:

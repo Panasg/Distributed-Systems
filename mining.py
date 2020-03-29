@@ -2,7 +2,7 @@ import data
 import threading
 import broadcast
 import time
-from random import seed,radint
+from random import seed,randint
 
 miningLock=threading.RLock()
 someoneIsMining=False
@@ -38,7 +38,7 @@ def mine_thread():
     broadcast.broadcast_a_block(testingBlock)
     with miningLock:
         someoneIsMining=False
-    return    
+    return
 
 def proof_of_work(block):#βρισκει το καταλληλο nonce και το αποθηκευει
     while valid_proof(block) is False:
