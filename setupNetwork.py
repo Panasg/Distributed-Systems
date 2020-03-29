@@ -55,17 +55,18 @@ def informEveryParticipant():#only executed by admin
     #print (genTrans.asDictionary())
     genBlock=block.createGenesisBlock([genTrans])
     broadcast.broadcast_a_block(genBlock)
-    data.blockchain.print_chain()
-    #print (genBlock.asDictionary())
+
+    for key in data.allPublicKeys:
+        if key!=data.publicKey:#οχι σε μενα
+            index=data.allPublicKeys.index(key)
+
+            requestBody={
+                'recipient_address':index,
+                'amount':100
+            }
+            response=requests.post('http://localhost:'+str(data.myPort)+'/new_transaction',json=requestBody,**kwargs)
+            print(f"{index} got its money")
     return
-
-    broadcast.broadcast_a_block(genesis_block,my_chain)
-
-
-    for key in my_chain.publicKeys:
-        if key!=data.publicKey:
-            trans_body = {"recipient":key,"amount":100}
-            response=requests.post('http://localhost:'+str(data.myPort)+'/newTransaction',json=trans_body,**kwargs)
 
 def saveNodes(values):#executed by every participant
     #print(values)

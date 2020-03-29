@@ -3,10 +3,13 @@ from flask import Flask, jsonify, request
 import requests
 import json
 import threading
+
 from Crypto.Hash import SHA384
 from Crypto.PublicKey import RSA
 from Crypto.Signature import PKCS1_v1_5
 import base64
+import copy
+
 import data
 import utilities
 
@@ -81,19 +84,19 @@ class transaction:
                 if not data.hasReceivedGenesisBlock:
                     data.utxos[0][self.id]=self.amount
                     data.hasReceivedGenesisBlock=True
-                    return true
+                    return True
                 else:
                     indexOfSender=data.allPublicKeys.index(self.sender)
                     indexOfRecipient=data.allPublicKeys.index(self.recipient)
 
-                    safeCopyOfUtxosSender=copy.deepcopy(data.utxos[indexOfSender])#θα δουλευουμε σε αντιγραφα ωστε αν κατι παει λαθος αν μην χαλασει τα δεδομενα μας
-                    safeCopyOfUtxosRecipient=copy.deepcopy(data.utxos[indexOfRecipient])
+                    tempCopyOfUtxosSender=copy.deepcopy(data.utxos[indexOfSender])#θα δουλευουμε σε αντιγραφα ωστε αν κατι παει λαθος αν μην χαλασει τα δεδομενα μας
+                    tempCopyOfUtxosRecipient=copy.deepcopy(data.utxos[indexOfRecipient])
                     allMoney=0
 
                     for transId in self.inputs:
-                        if transId in safeCopyOfUtxosSender:
-                            allMoney=allMoney+ safeCopyOfUtxosSender[transId]#παιρνουμε τα λεφτα που πηρε απο εκεινο το trans
-                            safeCopyOfUtxosSender.pop(transId)#το αφαιρουμε για να μην τα ξαναμετρησουμε
+                        if transId in tempCopyOfUtxosSender:
+                            allMoney=allMoney+ tempCopyOfUtxosSender[transId]#παιρνουμε τα λεφτα που πηρε απο εκεινο το trans
+                            tempCopyOfUtxosSender.pop(transId)#το αφαιρουμε για να μην τα ξαναμετρησουμε
                         else:
                             print("A past transaction was no found")
                             return False
@@ -102,10 +105,12 @@ class transaction:
                         print("Not enough Money")
                         return False
                     #δεν πηγε κατι λαθος, παιρνει ο καθενας τα λεφτα του και ολοι ειμαστε μια χαρα
-                    safeCopyOfUtxosSender[self.id]=allMoney-self.amount #ο sender παιρνει τα ρεστα του
-                    safeCopyOfUtxosRecipient[self.id]=self.amount
-                    data.utxos[indexOfSender]=safeCopyOfUtxosSender
-                    data.utxos[indexOfRecipient]=safeCopyOfUtxosRecipient
+                    if allMoney-self.amount>0:
+                        tempCopyOfUtxosSender[self.id]=allMoney-self.amount#ο sender παιρνει τα ρεστα του
+                    tempCopyOfUtxosRecipient[self.id]=self.amount
+
+                    data.utxos[indexOfSender]=tempCopyOfUtxosSender
+                    data.utxos[indexOfRecipient]=tempCopyOfUtxosRecipient
                     return True
 
         except Exception as e:
@@ -131,9 +136,10 @@ def createTranasactionFromDictionary(dictionary):
     return transaction(b['sender'], b['recipient'], b['amount'],b['timestamp'], b['inputs'],b['outputs'], b['id'], b['signature'])
 
 def create_transaction(rec_address,amount):
-    inputs=utilities.getListOfKeys( data.utxos[id]  )# για input βαζουμε ο,τι συναλλαγη εχω στο ονομα μου
+    with data.lock:
+        inputs=utilities.getListOfKeys( data.utxos[data.id]  )# για input βαζουμε ο,τι συναλλαγη εχω στο ονομα μου
 
-    new_trans=transaction(data.publicKey,data.allPublicKeys[rec_address],amount,time(),inputs,[])
+        new_trans=transaction(data.publicKey,data.allPublicKeys[rec_address],amount,time(),inputs,[])
 
     new_trans.id=new_trans.calculateId()
     new_trans.sign()

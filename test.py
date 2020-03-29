@@ -1,19 +1,20 @@
 import threading
 import time
 
-def sleepF():
-    time.sleep(3)
+
+lock = threading.RLock()
+def locks_and():
+    with lock:
+        time.sleep(2)
+        print(time.time())
+        return 0
+
+
+def thread_function():
+    locks_and()
     return
 
-def start_a_thread():
-    x = threading.Thread(target=sleepF)
-    x.start()
-    return "ok"
-
-    print("done")
-    
-
-
-for i in range (0,2):
-    x=input()
-    start_a_thread()
+x = threading.Thread(target=thread_function)
+x.start()
+y= threading.Thread(target=thread_function)
+y.start()

@@ -16,6 +16,18 @@ import utilities
 # Instantiate the Node
 app = Flask(__name__)
 
+@app.route('/showYourData', methods=['POST'])
+def show_it():
+    print("I will show")
+    with data.lock:
+        for block in  data.blockchain.chain:
+            print(block.asDictionary())
+        for trans in data.current_transactions:
+            print(trans.asDictionary())
+        print(data.id)
+        print(data.utxos)
+    return "OK",200
+
 @app.route('/receive_transaction', methods=['POST'])
 def receive_transaction():
 
@@ -26,15 +38,20 @@ def receive_transaction():
         return 'Missing values', 400
 
     trans_obj=utilities.asObject(values,"transaction")
-    #print("BEFORE SIGNATURE")
-    trans_obj.verify_signature()
+
+    retValue=trans_obj.verify_signature()
+    if not retValue:
+        return "Invalid signature",201
+
     retValue=trans_obj.validate_transaction()
-    if(retValue):
-        with data.lock:
-            data.current_transactions.append(trans_obj)
+    if not retValue:
+        return "Invalid transaction",201
+
+    with data.lock:
+        data.current_transactions[trans_obj.id]=trans_obj
     #print("AFTER SIGNATURE")
-    return "transaction recieved",200
-    #trans_obj.validate()
+    return "transaction received",200
+
 @app.route('/receiveABlock', methods=['POST'])
 def receive_a_block():
     values = request.get_json()
@@ -49,8 +66,8 @@ def receive_a_block():
             transaction.validate_transaction()
         data.blockchain.chain.append(my_block)
     print(data.utxos)
-    print(f"Current Blocks :")
-    data.blockchain.print_chain()
+    #print(f"Current Blocks :")
+    #data.blockchain.print_chain()
 
     return "Ok", 200
 
@@ -60,7 +77,9 @@ def new_transaction():
     required = ['recipient_address', 'amount']
     if not all(k in values for k in required):
         return 'Missing values', 400
+    print(f"I will create_transaction {values}")
     new_trans=transaction.create_transaction(values['recipient_address'],values['amount'])
+    print(f"I will broadcast_transaction {new_trans.asDictionary()}")
     broadcast.broadcast_transaction(new_trans)
     return "Transaction sent",200
 
@@ -74,9 +93,21 @@ def full_chain():
     }
     return str(response), 200
 
-@app.route('/show_balance',methods=['GET'])
+@app.route('/view_balance',methods=['GET'])
 def show_balance():
-    return
+    with data.lock:
+        allMoney=sum(data.utxos[data.id].values())
+    return str(allMoney),200
+
+@app.route('/view_transactions', methods=['GET'])
+def view_transactions():
+    with data.lock:
+        last_block=data.blockchain.chain[-1]
+        listOfDicts=[]
+        for trans in last_block.transactions:
+            listOfDicts.append(trans.asDictionary())
+
+    return str(listOfDicts),200
 
 @app.route('/nodes/register', methods=['POST'])
 def register_nodes():
@@ -85,12 +116,6 @@ def register_nodes():
 
     setupNetwork.saveNodes(values)
     return "ok",200
-
-
-
-@app.route('/view_transactions', methods=['GET'])
-def view_transactions():
-    return
 
 @app.route('/setup', methods=['GET'])
 def setup():
