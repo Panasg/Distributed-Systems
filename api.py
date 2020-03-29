@@ -93,7 +93,7 @@ def full_chain():
     }
     return str(response), 200
 
-@app.route('/view_balance',methods=['GET'])
+@app.route('/show_balance',methods=['GET'])
 def show_balance():
     with data.lock:
         allMoney=sum(data.utxos[data.id].values())
