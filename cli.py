@@ -60,6 +60,9 @@ while True:
         print(view_transactions) # Print Sender/Recipient/Amound/Index
     elif cmd.startswith('t'):
         part = cmd.split()
+        if int(part[1])==id:
+            print("Can't send money to myself")
+            continue
         # Time to create a new transaction
         trans_dict = {'recipient_address': int(part[1]), 'amount': int(part[2])}
         response=requests.post(f'{URL}/new_transaction',json=trans_dict,**kwargs)
@@ -72,8 +75,12 @@ while True:
         for x in f:
             part = x.split(' ')
             recepient = int((part[0].split('id'))[1])
+            if recepient==id:
+                print("Can't send money to myself")
+                continue
             amount = int(part[1])
             trans_dict = {'recipient_address': recepient, 'amount': amount}
+            kwargs['timeout'] = 25
             response=requests.post(f'{URL}/new_transaction',json=trans_dict,**kwargs)
             if response.status_code == 200: # Everthing is well done
                 print("Transaction Completed!")

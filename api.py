@@ -20,10 +20,14 @@ app = Flask(__name__)
 def show_it():
     print("I will show")
     with data.lock:
+
         for block in  data.blockchain.chain:
             print(block.asDictionary())
-        for trans in data.current_transactions:
+
+        for trans in data.current_transactions.values():
+            
             print(trans.asDictionary())
+
         print(data.id)
         print(data.utxos)
     return "OK",200
@@ -48,6 +52,7 @@ def receive_transaction():
         return "Invalid transaction",201
 
     with data.lock:
+        print(f"type of elem in current tras {type(trans_obj)}")
         data.current_transactions[trans_obj.id]=trans_obj
     #print("AFTER SIGNATURE")
     return "transaction received",200

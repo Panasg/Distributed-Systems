@@ -86,6 +86,10 @@ class transaction:
                     data.hasReceivedGenesisBlock=True
                     return True
                 else:
+                    if self.sender==self.recipient:
+                        print("Sender is Recipient")
+                        return False
+
                     indexOfSender=data.allPublicKeys.index(self.sender)
                     indexOfRecipient=data.allPublicKeys.index(self.recipient)
 
