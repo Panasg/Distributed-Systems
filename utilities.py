@@ -55,49 +55,60 @@ def getListOfKeys(dict):#παιρνει dict και γυρνα λιστα με �
 
     return list
 
-'''
-def proof_of_work(self, last_block):
-    last_proof = last_block['proof']
-    last_hash = self.hash(last_block)
+def consensus():
+    replaced = resolve_conflicts()
 
-    proof = 0
-    while self.valid_proof(last_proof, proof, last_hash) is False:
-        proof += 1
+    if replaced:
+        response = {
+            'message': 'Our chain was replaced',
+            'new_chain': data.blockchain.chain
+        }
+        status_code=500#replaced
+    else:
+        response = {
+            'message': 'Our chain is authoritative',
+            'chain': data.blockchain.chain
+        }
+        status_code=200#not replaced
+    return status_code
 
-    return proof
-
-
-def valid_proof(last_proof, proof, last_hash):
-    guess = f'{last_proof}{proof}{last_hash}'.encode()
-    guess_hash = hashlib.sha256(guess).hexdigest()
-    return guess_hash[:4] == "0000"
-
-
-def resolve_conflicts(self):
-    neighbours = self.nodes
+def resolve_conflicts():
+    neighbours = data.allUrls
     new_chain = None
 
     # We're only looking for chains longer than ours
-    max_length = len(self.chain)
+    max_length = len(data.blockchain.chain)
 
     # Grab and verify the chains from all the nodes in our network
     for node in neighbours:
-        response = requests.get(f'http://{node}/chain')
+        response = requests.get(f'{node}/chain')
 
         if response.status_code == 200:
             length = response.json()['length']
             chain = response.json()['chain']
 
             # Check if the length is longer and the chain is valid
-            if length > max_length and self.valid_chain(chain):
+            if length > max_length and valid_chain(chain):
                 max_length = length
                 new_chain = chain
 
     # Replace our chain if we discovered a new, valid chain longer than ours
     if new_chain:
-        self.chain = new_chain
+        data.blockchain.chain = new_chain
         return True
 
     return False
 
-'''
+def valid_chain(chain):
+    tempChain=[]
+    for blockAsDict in chain:
+        tempChain.append(block.createBlockFromDictionary(blockAsDict))
+
+    i=0
+    for block in tempChain[1:]:
+        i++
+        if not mining.valid_proof(block):
+            return False
+        if block.previous_hash!=tempChain[i-1].current_hash:
+            return False
+    return True

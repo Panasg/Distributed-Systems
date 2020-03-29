@@ -100,7 +100,7 @@ def full_chain():
         'chain': data.blockchain.chain,
         'length': len(data.blockchain.chain),
     }
-    return str(response), 200
+    return jsonify(response), 200
 
 @app.route('/show_balance',methods=['GET'])
 def show_balance():
