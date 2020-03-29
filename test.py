@@ -11,7 +11,7 @@ def start_a_thread():
     return "ok"
 
     print("done")
-    x.join()
+    
 
 
 for i in range (0,2):
