@@ -22,5 +22,7 @@ connectedParticipants=0
 
 #aytes tis allazoyme gia na parametropoihsoyme to systhma mas
 numOfParticipants=3
+capacity=3
+difficulty=3
 
 lock = threading.RLock()

@@ -1,6 +1,14 @@
 import threading
 import time
-dict={"asdas":12,"12312":2}
+import block
 
-for d in dict:
-    print(d)
+
+bl=block.createGenesisBlock([])
+
+str=bl.hash()
+by=bl.hash().encode()
+#print(bl.hash().hexdigest())
+print(bytes(str,'utf-8'))
+print(by)
+for byte in by:
+    print(byte)

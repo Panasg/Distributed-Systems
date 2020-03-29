@@ -6,6 +6,7 @@ from uuid import uuid4
 from flask import Flask, jsonify, request
 import requests
 import threading
+
 import broadcast
 import transaction
 import block_chain
@@ -13,6 +14,7 @@ import data
 import wallet
 import setupNetwork
 import utilities
+import mining
 # Instantiate the Node
 app = Flask(__name__)
 
@@ -25,7 +27,7 @@ def show_it():
             print(block.asDictionary())
 
         for trans in data.current_transactions.values():
-            
+
             print(trans.asDictionary())
 
         print(data.id)
@@ -54,6 +56,8 @@ def receive_transaction():
     with data.lock:
         print(f"type of elem in current tras {type(trans_obj)}")
         data.current_transactions[trans_obj.id]=trans_obj
+        if len(data.current_transactions)==data.capacity:
+            mining.mine()
     #print("AFTER SIGNATURE")
     return "transaction received",200
 
