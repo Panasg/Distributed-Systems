@@ -220,7 +220,7 @@ if __name__ == '__main__':
 
     data.blockchain = block_chain.Blockchain()
 
-
+    
     myInfo={
         "url":f"http://localhost:{data.myPort}",
         "publicKey":data.publicKey

@@ -4,6 +4,8 @@ import threading
 myPort =None
 adminPort=None
 myUrl=None
+myIP=None
+adminIP=None
 
 publicKey=None
 privateKey=None
