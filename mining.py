@@ -13,7 +13,7 @@ def mine():
             data.someoneIsMining=True
             x.start()
         else:
-            print("someoneIsMining")
+            print("Mining is already taking place")            
     return
 
 def mine_thread():
@@ -35,7 +35,7 @@ def mine_thread():
 
     magicNonce=proof_of_work(testingBlock)
     testingBlock.current_hash=testingBlock.hash()#εχουμε το σωστο hash πλεον
-    
+
     print(f"I mined this block {testingBlock.current_hash} {testingBlock.nonce}")
     broadcast.broadcast_a_block(testingBlock)
 

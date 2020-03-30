@@ -22,7 +22,7 @@ def register(values):#only executed by admin
     tempNodes.append(node)
     tempKeys.append(publicKey)
 
-    #print(f"Keys so far {tempKeys}")
+    
     with data.lock:
         data.connectedParticipants=data.connectedParticipants+1
         if data.numOfParticipants==data.connectedParticipants:#now we must send to everyone(including admin) all nodes
@@ -35,10 +35,6 @@ def register(values):#only executed by admin
 
 
 def informEveryParticipant():#only executed by admin
-
-    print ("I should inform now everyone")
-
-
     time.sleep(2)
     kwargs = {}
     kwargs['timeout'] = 25
@@ -52,7 +48,7 @@ def informEveryParticipant():#only executed by admin
 
 
     genTrans=transaction.createGenesisTransaction()
-    #print (genTrans.asDictionary())
+
     genBlock=block.createGenesisBlock([genTrans])
     broadcast.broadcast_a_block(genBlock)
 
@@ -65,11 +61,10 @@ def informEveryParticipant():#only executed by admin
                 'amount':100
             }
             response=requests.post('http://localhost:'+str(data.myPort)+'/new_transaction',json=requestBody,**kwargs)
-            print(f"{index} got its money")
+            print(f"Participant {index} got its money")
     return
 
 def saveNodes(values):#executed by every participant
-    #print(values)
     data.allUrls=values['nodes']
     data.allPublicKeys=values['publicKeys']
     data.id=values['yourId']

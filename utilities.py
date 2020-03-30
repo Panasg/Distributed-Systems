@@ -1,6 +1,8 @@
 import hashlib
 import  transaction
 import block
+import data
+import requests
 
 def hashStringToString(stringToBeHashed):#dexetai string kai gyrnaei to hash toy ws string
     bytesOfString=stringToBeHashed.encode()
@@ -59,21 +61,13 @@ def consensus():
     replaced = resolve_conflicts()
 
     if replaced:
-        response = {
-            'message': 'Our chain was replaced',
-            'new_chain': data.blockchain.chain
-        }
         status_code=500#replaced
     else:
-        response = {
-            'message': 'Our chain is authoritative',
-            'chain': data.blockchain.chain
-        }
         status_code=200#not replaced
     return status_code
 
 def resolve_conflicts():
-    neighbours = data.allUrls
+    neighbours = [a for a in data.allUrls if a!=data.myUrl]
     new_chain = None
 
     # We're only looking for chains longer than ours
@@ -88,11 +82,20 @@ def resolve_conflicts():
             chain = response.json()['chain']
             transactions = response.json()['transactions']
             utxos = response.json()['utxos']
+
+
             # Check if the length is longer and the chain is valid
             if length > max_length and valid_chain(chain):
                 max_length = length
-                new_chain = chain
-                new_transactions = transactions
+
+                ####απο τα dictionaries πρεπει να φτιαξουμε τα παντα ως αντικειμενα
+                objChain=[block.createBlockFromDictionary(blockAsDict) for blockAsDict in chain]
+                objCurrentTransactions={}
+                for transId in transactions:
+                    objCurrentTransactions[transId]= asObject(transactions[transId],'transaction')
+                ########
+                new_chain = objChain
+                new_transactions = objCurrentTransactions
                 new_utxos = utxos
 
     # Replace our chain if we discovered a new, valid chain longer than ours

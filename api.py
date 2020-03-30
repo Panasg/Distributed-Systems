@@ -20,19 +20,38 @@ app = Flask(__name__)
 
 @app.route('/showYourData', methods=['POST'])
 def show_it():
-    print("I will show")
     with data.lock:
 
         for block in  data.blockchain.chain:
             print(block.asDictionary())
 
         for trans in data.current_transactions.values():
-
             print(trans.asDictionary())
 
         print(data.id)
         print(data.utxos)
+
+        consensus_result=utilities.consensus()
     return "OK",200
+
+@app.route('/cliShowMeYourState', methods=['GET'])
+def show_it2():
+    with data.lock:
+        blockCh=[]
+        for block in  data.blockchain.chain:
+            blockCh.append({'current_hash':block.current_hash,'previous_hash':block.previous_hash})
+
+        current_transactions=[]
+        for trans in data.current_transactions.values():
+            current_transactions.append({'id':trans.id,'amount':trans.amount})
+
+        body={
+            "blockchain":blockCh,
+            "current_transactions":current_transactions,
+            "utxos":data.utxos
+        }
+        resp=f"Chain: {str(blockCh)} \nCurrent trans: {str(current_transactions)}\nUtxos: {str(data.utxos)}"
+    return resp,200
 
 @app.route('/receive_transaction', methods=['POST'])
 def receive_transaction():
@@ -54,21 +73,16 @@ def receive_transaction():
         return "Invalid transaction",201
 
     with data.lock:
-        #print(f"type of elem in current tras {type(trans_obj)}")
-        print(data.current_transactions)
-        #print(f"i reached the capacity: {data.capacity}")
         data.current_transactions[trans_obj.id]=trans_obj
-        print(data.current_transactions)
-        print(len(data.current_transactions))
         if len(data.current_transactions)>=data.capacity:
             mining.mine()
-    #print("AFTER SIGNATURE")
+
     return "transaction received",200
 
 @app.route('/receiveABlock', methods=['POST'])
 def receive_a_block():
     values = request.get_json()
-    print(" I AM HERE ")
+
     required = ['index', 'transactions', 'timestamp','nonce','previous_hash','current_hash']
     if not all(k in values for k in required):
         return 'Missing values', 400
@@ -76,11 +90,9 @@ def receive_a_block():
     my_block=utilities.asObject(values,'block')
     if len(data.blockchain.chain)==0:
         with data.lock:
-            for transaction in my_block.transactions:
+            for transaction in my_block.transactions:# πρεπει να κανουμε validate το genesis transaction
                 transaction.validate_transaction()
             data.blockchain.chain.append(my_block)
-            #print(data.utxos)
-            data.utxos_copy=data.utxos[:]
         return "GenesisBlock added",200
 
     # to hash einai ypologismeno swsta
@@ -123,10 +135,7 @@ def receive_a_block():
         return "consensus",consensus_result
             #an petyxei parnoyme chain, trans kai uxos
 
-    #print(f"Current Blocks :")
-    #data.blockchain.print_chain()
 
-    
 
 @app.route('/new_transaction', methods=['POST'])
 def new_transaction():
@@ -143,12 +152,19 @@ def new_transaction():
 
 @app.route('/chain', methods=['GET'])
 def full_chain():
-    response = {
-        'chain': data.blockchain.chain,
-        'transactions':data.blockchain.transactions,
-        'utxos':data.utxos,
-        'length': len(data.blockchain.chain),
-    }
+    with data.lock:
+        blockchainAsDiction=[block.asDictionary() for block in data.blockchain.chain]
+        transactionsAsDiction={}
+        for transId in data.current_transactions:#για καθε key του dictionary
+            transactionsAsDiction[transId] = data.current_transactions[transId].asDictionary()
+
+
+        response = {
+            'chain': blockchainAsDiction,
+            'transactions':transactionsAsDiction,
+            'utxos':data.utxos,
+            'length': len(data.blockchain.chain),
+            }
     return jsonify(response), 200
 
 @app.route('/show_balance',methods=['GET'])
@@ -204,9 +220,6 @@ if __name__ == '__main__':
 
     data.blockchain = block_chain.Blockchain()
 
-    #print(f'My port {data.myPort} ,Admin\'s port {data.adminPort}')
-    #print(f'My publicKey {data.publicKey}')
-
 
     myInfo={
         "url":f"http://localhost:{data.myPort}",
@@ -216,7 +229,7 @@ if __name__ == '__main__':
         kwargs = {}
         kwargs['timeout'] = 5
         setupResponse=requests.get(f'http://localhost:{data.adminPort}/setup',json=myInfo,**kwargs)
-        #print(f"Setup Response {setupResponse}")
+
     else:#admin is not listening yet
         setupNetwork.register(myInfo)
 

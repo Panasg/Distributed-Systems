@@ -8,7 +8,7 @@ import os
 # OS module provides a way of using operating system dependent functionality
 import sys
 # Provides access to system-specific variables and functions
-
+import json
 
 help_msg ="""
 Usage:
@@ -50,35 +50,42 @@ while True:
     print(cmd)
     if cmd == 'exit' :
         break   # Time to exit our loop
+
     elif cmd == 'help' or cmd =='-h' :
         print(help_msg) # User needs some help
+
     elif  cmd == 'balance' :
         wallet_balance = requests.get(f'{URL}/show_balance').text # Get the wallet's current balance
+
         print(wallet_balance)   # Print the sum of the UTXOs
     elif cmd == 'view' :
         view_transactions = requests.get(f'{URL}/view_transactions').text  # Get the latest transaction of the block
         print(view_transactions) # Print Sender/Recipient/Amound/Index
+
     elif cmd.startswith('t'):
         part = cmd.split()
         if int(part[1])==id:
             print("Can't send money to myself")
             continue
         # Time to create a new transaction
+        if(int(part[1])<=0):
+            print("Money must be a positive value")
+            continue
         trans_dict = {'recipient_address': int(part[1]), 'amount': int(part[2])}
         response=requests.post(f'{URL}/new_transaction',json=trans_dict,**kwargs)
         if response.status_code == 200: # Everthing is well done
             print("Transaction Completed!")
         else:
             print("Error occured")  # Some error occured in creating the new transaction
+
     elif cmd == 'bulk_transactions':
-        f = open(f'transactions{id}.txt', "r")
+        f = open(f'5nodes/transactions{id}.txt', "r")
         for x in f:
             part = x.split(' ')
             recepient = int((part[0].split('id'))[1])
             if recepient==id:
                 print("Can't send money to myself")
                 continue
-            amount = int(part[1])
             trans_dict = {'recipient_address': recepient, 'amount': amount}
             kwargs['timeout'] = 25
             response=requests.post(f'{URL}/new_transaction',json=trans_dict,**kwargs)
@@ -87,6 +94,10 @@ while True:
             else:
                 print("Error occured")  # Some error occured in creating the new transaction
         f.close()
+
+    elif cmd=='state':
+        print(requests.get(f'{URL}/cliShowMeYourState').text)
+
     else :
         print("This command is unknown. For further help call 'help' command")  # Command unknown. For further development please support us on Patreon
 

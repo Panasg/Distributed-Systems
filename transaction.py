@@ -72,7 +72,7 @@ class transaction:
             signedId=SHA384.new(self.id.encode())
             verifier = PKCS1_v1_5.new(rsa_key1)
             ver= verifier.verify(signedId, base64.b64decode(self.signature))
-            print(f"verifier {ver}")
+            
             return ver
         except Exception as e:
             print(f'verify_signature: {e.__class__.__name__}: {e}')
@@ -89,6 +89,9 @@ class transaction:
                     if self.sender==self.recipient:
                         print("Sender is Recipient")
                         return False
+                    if self.amount<0:
+                        print("Negate amount")
+                        return False
 
                     indexOfSender=data.allPublicKeys.index(self.sender)
                     indexOfRecipient=data.allPublicKeys.index(self.recipient)
@@ -102,11 +105,11 @@ class transaction:
                             allMoney=allMoney+ tempCopyOfUtxosSender[transId]#παιρνουμε τα λεφτα που πηρε απο εκεινο το trans
                             tempCopyOfUtxosSender.pop(transId)#το αφαιρουμε για να μην τα ξαναμετρησουμε
                         else:
-                            print("A past transaction was no found")
+                            print("A past transaction was not found")
                             return False
 
                     if(allMoney<self.amount):
-                        print("Not enough Money")
+                        print("Not enough money")
                         return False
                     #δεν πηγε κατι λαθος, παιρνει ο καθενας τα λεφτα του και ολοι ειμαστε μια χαρα
                     if allMoney-self.amount>0:
@@ -140,6 +143,7 @@ def createTranasactionFromDictionary(dictionary):
     return transaction(b['sender'], b['recipient'], b['amount'],b['timestamp'], b['inputs'],b['outputs'], b['id'], b['signature'])
 
 def create_transaction(rec_address,amount):
+
     with data.lock:
         inputs=utilities.getListOfKeys( data.utxos[data.id]  )# για input βαζουμε ο,τι συναλλαγη εχω στο ονομα μου
 

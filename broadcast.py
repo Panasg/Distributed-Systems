@@ -10,9 +10,8 @@ def broadcast_transaction(new_trans):
     kwargs = {}
     kwargs['timeout'] = 25
     trans_dict=new_trans.asDictionary()
-    #print(trans_dict)
+
     for node in data.allUrls:
-        #print(node+"/receiveATransaction")
         response=requests.post(node+"/receive_transaction",json=trans_dict,**kwargs)
 
 
