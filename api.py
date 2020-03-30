@@ -56,7 +56,7 @@ def receive_transaction():
     with data.lock:
         print(f"type of elem in current tras {type(trans_obj)}")
         data.current_transactions[trans_obj.id]=trans_obj
-        if len(data.current_transactions)==data.capacity:
+        if len(data.current_transactions)>=data.capacity:
             mining.mine()
     #print("AFTER SIGNATURE")
     return "transaction received",200
@@ -101,9 +101,8 @@ def new_transaction():
     required = ['recipient_address', 'amount']
     if not all(k in values for k in required):
         return 'Missing values', 400
-    print(f"I will create_transaction {values}")
+
     new_trans=transaction.create_transaction(values['recipient_address'],values['amount'])
-    print(f"I will broadcast_transaction {new_trans.asDictionary()}")
     broadcast.broadcast_transaction(new_trans)
     return "Transaction sent",200
 

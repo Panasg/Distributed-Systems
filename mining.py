@@ -2,17 +2,18 @@ import data
 import threading
 import broadcast
 import time
+import utilities
 from random import seed,randint
 
-miningLock=threading.RLock()
-someoneIsMining=False
 
 def mine():
     x = threading.Thread(target=mine_thread)
-    with miningLock:
-        if not someoneIsMining:
-            someoneIsMining=True
+    with data.miningLock:
+        if not data.someoneIsMining:
+            data.someoneIsMining=True
             x.start()
+        else:
+            print("someoneIsMining")
     return
 
 def mine_thread():
@@ -24,7 +25,7 @@ def mine_thread():
 
         dictionary={
             'index':data.blockchain.chain[-1].index+1,
-            'timestamp':time(),
+            'timestamp':time.time(),
             'transactions':listOfTrans,
             'nonce': (randint(0, 100000)),
             'current_hash':'1234',
@@ -34,10 +35,13 @@ def mine_thread():
 
     magicNonce=proof_of_work(testingBlock)
     testingBlock.current_hash=testingBlock.hash()#εχουμε το σωστο hash πλεον
-
+    
+    print(f"I mined this block {testingBlock.current_hash} {testingBlock.nonce}")
     broadcast.broadcast_a_block(testingBlock)
-    with miningLock:
-        someoneIsMining=False
+
+    with data.miningLock:
+        data.someoneIsMining=False
+
     return
 
 def proof_of_work(block):#βρισκει το καταλληλο nonce και το αποθηκευει
