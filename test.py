@@ -1,14 +1,12 @@
 import threading
 import time
 import block
-
+import mining
 
 bl=block.createGenesisBlock([])
 
-str=bl.hash()
-by=bl.hash().encode()
-#print(bl.hash().hexdigest())
-print(bytes(str,'utf-8'))
-print(by)
-for byte in by:
-    print(byte)
+print(time.time())
+mining.proof_of_work(bl)
+bl.current_hash=bl.hash()
+print(time.time())
+print(bl.asDictionary())

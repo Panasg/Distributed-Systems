@@ -48,4 +48,4 @@ def proof_of_work(block):#βρισκει το καταλληλο nonce και τ
 
 def valid_proof(block):
     guess_hash = block.hash()
-    return guess_hash[:data.capacity] == '0'*data.capacity
+    return guess_hash[:data.difficulty] == '0'*data.difficulty

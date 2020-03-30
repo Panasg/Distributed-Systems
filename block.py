@@ -28,6 +28,7 @@ class block:
         tempDict={
             "index":self.index,
             "transactions":transactionsAsList,
+            "timestamp":self.timestamp,
             "previous_hash":self.previous_hash,
             "nonce":self.nonce
         }
@@ -82,7 +83,7 @@ def createBlockFromDictionary(dictionary):
     tempBlock= block(b['index'], b['timestamp'],temp_trans_list ,b['nonce'], b['current_hash'], b['previous_hash'])
     return tempBlock
 
-    
+
 
 def createGenesisBlock(transactions):#mono o admin to ektelei
 
