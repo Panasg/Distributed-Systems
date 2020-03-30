@@ -86,15 +86,20 @@ def resolve_conflicts():
         if response.status_code == 200:
             length = response.json()['length']
             chain = response.json()['chain']
-
+            transactions = response.json()['transactions']
+            utxos = response.json()['utxos']
             # Check if the length is longer and the chain is valid
             if length > max_length and valid_chain(chain):
                 max_length = length
                 new_chain = chain
+                new_transactions = transactions
+                new_utxos = utxos
 
     # Replace our chain if we discovered a new, valid chain longer than ours
     if new_chain:
         data.blockchain.chain = new_chain
+        data.blockchain.transactions=new_transactions
+        data.utxos=new_utxos
         return True
 
     return False

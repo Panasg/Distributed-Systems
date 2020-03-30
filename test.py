@@ -5,7 +5,7 @@ import mining
 import data
 
 from random import seed,randint
-
+'''
 seed()
 
 bl=block.createGenesisBlock([])
@@ -19,3 +19,9 @@ for i in range (1,6):
     print(f"Time {time.time()-t1}")
     print(f"{bl.current_hash} {bl.nonce}")
 #print(bl.asDictionary())
+'''
+first = [1,2]
+sec=first[:]
+first.append(3)
+print(first)
+print(sec)

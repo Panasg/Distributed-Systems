@@ -16,7 +16,7 @@ allUrls=[]
 allPublicKeys=[]
 
 utxos=[]
-
+#utxos_copy=[]
 hasReceivedGenesisBlock=False
 connectedParticipants=0
 

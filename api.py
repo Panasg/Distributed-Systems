@@ -54,8 +54,12 @@ def receive_transaction():
         return "Invalid transaction",201
 
     with data.lock:
-        print(f"type of elem in current tras {type(trans_obj)}")
+        #print(f"type of elem in current tras {type(trans_obj)}")
+        print(data.current_transactions)
+        #print(f"i reached the capacity: {data.capacity}")
         data.current_transactions[trans_obj.id]=trans_obj
+        print(data.current_transactions)
+        print(len(data.current_transactions))
         if len(data.current_transactions)>=data.capacity:
             mining.mine()
     #print("AFTER SIGNATURE")
@@ -64,36 +68,65 @@ def receive_transaction():
 @app.route('/receiveABlock', methods=['POST'])
 def receive_a_block():
     values = request.get_json()
+    print(" I AM HERE ")
     required = ['index', 'transactions', 'timestamp','nonce','previous_hash','current_hash']
     if not all(k in values for k in required):
         return 'Missing values', 400
 
     my_block=utilities.asObject(values,'block')
-
-    with data.lock:
-        for transaction in my_block.transactions:
-            transaction.validate_transaction()
-        data.blockchain.chain.append(my_block)
-    print(data.utxos)
+    if len(data.blockchain.chain)==0:
+        with data.lock:
+            for transaction in my_block.transactions:
+                transaction.validate_transaction()
+            data.blockchain.chain.append(my_block)
+            #print(data.utxos)
+            data.utxos_copy=data.utxos[:]
+        return "GenesisBlock added",200
 
     # to hash einai ypologismeno swsta
+    if  my_block.hash()!=my_block.current_hash:
+        return "Wrong Hash",400
 
     # to hash exei thn swsth morfh
+    if mining.valid_proof(my_block) ==False:
+        return "Invalid proof",401
 
     #1h to hash einai idio me to prohgoymeno hash, shmainei pws oi alysides symfvnoyn
-        #pairnoyme ta utxos opws htan sto prohgoymeno block
-        #kanoyme ena ena validate ta transactions san na ta vlepoyme prwth fora
-        #afairoyme osa exoyme koina sto current_transactions
+    with data.lock:
+        if  my_block.previous_hash==(data.blockchain.chain[-1]).current_hash:
+            #pairnoyme ta utxos opws htan sto prohgoymeno block
+            #data.utxos=data.utxos_copy[:]
+            #kanoyme ena ena validate ta transactions san na ta vlepoyme prwth fora
+            for transaction in my_block.transactions:
+                tran_id=transaction.id
+                if  not  ( tran_id in data.current_transactions):
+                    return "unheard transaction in new  block",402
+            #afairoyme osa exoyme koina sto current_transactions
+            for trans in my_block.transactions:
+                tran_id=trans.id
+                data.current_transactions.pop(tran_id)
+            data.blockchain.chain.append(my_block)
+            return "Block added",200
+            #data.utxos_copy=data.utxos[:]
+
+
+
     #2h to hash yparxei pio ba8eia sthn oyra
-        #den kanoyme kati to aporriptoyme
+        for  temp_blocks in reversed(data.blockchain.chain):
+            if my_block.previous_hash==temp_blocks.current_hash:
+                #den kanoyme kati to aporriptoyme
+                return "My chain is  not shorter,block rejected",403
+
     #3h to previous hash den yparxei mesa sthn lista mas
-            #consensus
+        #consensus
+        consensus_result=utilities.consensus()
+        return "consensus",consensus_result
             #an petyxei parnoyme chain, trans kai uxos
 
     #print(f"Current Blocks :")
     #data.blockchain.print_chain()
 
-    return "Ok", 200
+    
 
 @app.route('/new_transaction', methods=['POST'])
 def new_transaction():
@@ -112,6 +145,8 @@ def new_transaction():
 def full_chain():
     response = {
         'chain': data.blockchain.chain,
+        'transactions':data.blockchain.transactions,
+        'utxos':data.utxos,
         'length': len(data.blockchain.chain),
     }
     return jsonify(response), 200
