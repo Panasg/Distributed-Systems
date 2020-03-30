@@ -17,4 +17,4 @@ $ pipenv install
     * `$ pipenv run python api.py -p 5002 -a 5000`
 ```    
 5.Run the cli:
-    * `$ pipenv run python cli.py {port}`
+    * $ pipenv run python cli.py {port}`
