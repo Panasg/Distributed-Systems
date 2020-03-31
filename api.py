@@ -50,7 +50,7 @@ def show_it2():
             "current_transactions":current_transactions,
             "utxos":data.utxos
         }
-        resp=f"Chain: {str(blockCh)} \nCurrent trans: {str(current_transactions)}\nUtxos: {str(data.utxos)}"
+        resp=f"Chain: {str(blockCh)} \nLength: {len(blockCh)}\nCurrent trans: {str(current_transactions)}\nUtxos: {str(data.utxos)}"
     return resp,200
 
 @app.route('/receive_transaction', methods=['POST'])
@@ -119,7 +119,7 @@ def receive_a_block():
                 data.current_transactions.pop(tran_id)
 
             data.blockchain.chain.append(my_block)
-            
+
             if len(data.current_transactions)>=data.capacity:#ισως ηρθαν στην ουρα πολλα ακομα transactions
                 mining.mine()
             return "Block added",200

@@ -18,6 +18,7 @@ Commands:
 --> 'view'                            ---  Choose this command to view last transactions
 --> 'balance'                         ---  Choose this command to show the balance
 --> 'help || -h'                      ---  Choose this command to get yourself some help ASAP
+--> 'state'                           ---  Choose this command to get yourself a readable view of all data
 --> 'exit'                            ---  Choose this command to exit client mode
 """
 
@@ -86,6 +87,7 @@ while True:
             if recepient==id:
                 print("Can't send money to myself")
                 continue
+            amount=int(part[1])
             trans_dict = {'recipient_address': recepient, 'amount': amount}
             kwargs['timeout'] = 25
             response=requests.post(f'{URL}/new_transaction',json=trans_dict,**kwargs)
