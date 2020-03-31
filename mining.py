@@ -13,7 +13,7 @@ def mine():
             data.someoneIsMining=True
             x.start()
         else:
-            print("Mining is already taking place")            
+            print("Mining is already taking place")
     return
 
 def mine_thread():
@@ -22,6 +22,8 @@ def mine_thread():
         listOfTrans=[]
         for trans in data.current_transactions.values():
             listOfTrans.append(trans.asDictionary())
+            if len(listOfTrans)==data.capacity:# ωστε να μπαινουν παντα ακριβως capacity transactions σε ενα block
+                break
 
         dictionary={
             'index':data.blockchain.chain[-1].index+1,

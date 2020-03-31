@@ -117,7 +117,11 @@ def receive_a_block():
             for trans in my_block.transactions:
                 tran_id=trans.id
                 data.current_transactions.pop(tran_id)
+
             data.blockchain.chain.append(my_block)
+            
+            if len(data.current_transactions)>=data.capacity:#ισως ηρθαν στην ουρα πολλα ακομα transactions
+                mining.mine()
             return "Block added",200
             #data.utxos_copy=data.utxos[:]
 
@@ -220,7 +224,7 @@ if __name__ == '__main__':
 
     data.blockchain = block_chain.Blockchain()
 
-    
+
     myInfo={
         "url":f"http://localhost:{data.myPort}",
         "publicKey":data.publicKey
