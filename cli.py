@@ -82,8 +82,8 @@ while True:
             print("Error occured")  # Some error occured in creating the new transaction
 
     elif cmd == 'bulk_transactions':
-        #f = open(f'5nodes/transactions{id}.txt', "r")
-        f = open(f'transactions{id}.txt', "r")
+        f = open(f'5nodes/transactions{id}.txt', "r")
+        #f = open(f'transactions{id}.txt', "r")
         for x in f:
             part = x.split(' ')
             recepient = int((part[0].split('id'))[1])
