@@ -40,7 +40,7 @@ print(sys.argv)
 #args = parser.parse_args()
 
 #COORDINATOR_HOST=f'http://{args.host}:{args.port}' cli 1 5000
-URL=f'http://http://192.168.0.{sys.argv[1]}:{sys.argv[2]}'
+URL=f'http://192.168.0.{sys.argv[1]}:{sys.argv[2]}'
 PORT=int(sys.argv[2])
 id = int(sys.argv[1])-1
 
