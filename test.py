@@ -1,3 +1,5 @@
-import flask
+import socket
+hostname = socket.gethostname()
+IPAddr = socket.gethostbyname(hostname)
 
-print(flask.__version__)
+print(IPAddr)
