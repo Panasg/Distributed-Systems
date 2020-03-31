@@ -9,6 +9,7 @@ import os
 import sys
 # Provides access to system-specific variables and functions
 import json
+import time
 
 help_msg ="""
 Usage:
@@ -19,6 +20,7 @@ Commands:
 --> 'balance'                         ---  Choose this command to show the balance
 --> 'help || -h'                      ---  Choose this command to get yourself some help ASAP
 --> 'state'                           ---  Choose this command to get yourself a readable view of all data
+--> 'benchmark'                       ---  Choose this command to get benchmark data. Better use when mining has stopped
 --> 'exit'                            ---  Choose this command to exit client mode
 """
 
@@ -69,7 +71,7 @@ while True:
             print("Can't send money to myself")
             continue
         # Time to create a new transaction
-        if(int(part[1])<=0):
+        if(int(part[2])<=0):
             print("Money must be a positive value")
             continue
         trans_dict = {'recipient_address': int(part[1]), 'amount': int(part[2])}
@@ -80,7 +82,8 @@ while True:
             print("Error occured")  # Some error occured in creating the new transaction
 
     elif cmd == 'bulk_transactions':
-        f = open(f'5nodes/transactions{id}.txt', "r")
+        #f = open(f'5nodes/transactions{id}.txt', "r")
+        f = open(f'transactions{id}.txt', "r")
         for x in f:
             part = x.split(' ')
             recepient = int((part[0].split('id'))[1])
@@ -99,6 +102,8 @@ while True:
 
     elif cmd=='state':
         print(requests.get(f'{URL}/cliShowMeYourState').text)
+    elif cmd=='benchmark':
+        print(requests.get(f'{URL}/benchmark').text)
 
     else :
         print("This command is unknown. For further help call 'help' command")  # Command unknown. For further development please support us on Patreon

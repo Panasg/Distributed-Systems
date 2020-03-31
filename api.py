@@ -34,6 +34,17 @@ def show_it():
         consensus_result=utilities.consensus()
     return "OK",200
 
+@app.route('/benchmark', methods=['get'])
+def benchmarks():
+    if len(data.transactionTimes) ==0 or len(data.miningTimes)==0:
+        return "No data",400
+    averageTrans=sum(data.transactionTimes)/len(data.transactionTimes)
+    averageMining=sum(data.miningTimes)/len(data.miningTimes)
+
+    resp=f"Average Transaction Time: {averageTrans}\nAverage Mining Time: {averageMining}"
+    return resp,200
+
+
 @app.route('/cliShowMeYourState', methods=['GET'])
 def show_it2():
     with data.lock:
@@ -55,7 +66,6 @@ def show_it2():
 
 @app.route('/receive_transaction', methods=['POST'])
 def receive_transaction():
-
     values=request.get_json()
     required = ['sender', 'recipient', 'amount','timestamp', 'inputs','outputs', 'id', 'signature']
     if not all(k in values for k in required):
@@ -128,14 +138,19 @@ def receive_a_block():
 
 
     #2h to hash yparxei pio ba8eia sthn oyra
-        for  temp_blocks in reversed(data.blockchain.chain):
+        for temp_blocks in reversed(data.blockchain.chain):
             if my_block.previous_hash==temp_blocks.current_hash:
+                if len(data.current_transactions)>=data.capacity:#ισως ηρθαν στην ουρα πολλα ακομα transactions
+                    mining.mine()
                 #den kanoyme kati to aporriptoyme
                 return "My chain is  not shorter,block rejected",403
 
     #3h to previous hash den yparxei mesa sthn lista mas
         #consensus
+
         consensus_result=utilities.consensus()
+        if len(data.current_transactions)>=data.capacity:#ισως ηρθαν στην ουρα πολλα ακομα transactions
+            mining.mine()
         return "consensus",consensus_result
             #an petyxei parnoyme chain, trans kai uxos
 
@@ -143,6 +158,9 @@ def receive_a_block():
 
 @app.route('/new_transaction', methods=['POST'])
 def new_transaction():
+    with data.benchmarkLock:
+        t1=time()
+
     values = request.get_json()
     required = ['recipient_address', 'amount']
     if not all(k in values for k in required):
@@ -150,6 +168,10 @@ def new_transaction():
 
     new_trans=transaction.create_transaction(values['recipient_address'],values['amount'])
     broadcast.broadcast_transaction(new_trans)
+
+    with data.benchmarkLock:
+        data.transactionTimes.append(time()-t1)
+
     return "Transaction sent",200
 
 

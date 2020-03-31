@@ -17,6 +17,9 @@ def mine():
     return
 
 def mine_thread():
+    with data.benchmarkLock:
+        t1=time.time()
+
     seed()
     with data.lock:
         listOfTrans=[]
@@ -35,14 +38,16 @@ def mine_thread():
         }
     testingBlock=utilities.asObject(dictionary,"block")
 
-    magicNonce=proof_of_work(testingBlock)
+    magicNonce=proof_of_work(testingBlock)#εδω θα κατσουμε για αρκετη ωρα
+    with data.benchmarkLock:
+        data.miningTimes.append(time.time()-t1)
     testingBlock.current_hash=testingBlock.hash()#εχουμε το σωστο hash πλεον
 
     print(f"I mined this block {testingBlock.current_hash} {testingBlock.nonce}")
-    broadcast.broadcast_a_block(testingBlock)
 
     with data.miningLock:
-        data.someoneIsMining=False
+        data.someoneIsMining=False 
+    broadcast.broadcast_a_block(testingBlock)
 
     return
 
