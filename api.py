@@ -237,25 +237,26 @@ if __name__ == '__main__':
     parser = ArgumentParser()
     parser.add_argument('-p', '--port', default=5000, type=int, help='port to listen on')
     parser.add_argument('-a', '--admin', default=5000, type=int, help='port of admin')
-    
+    parser.add_argument('-l', '--lastByte', default=1, type=int, help='my lastByte')#admin παντα στο 0
+
     args = parser.parse_args()
 
     data.myPort=port = args.port
     data.adminPort=args.admin
-    data.myUrl=f"http://localhost:{data.myPort}"
+    data.myUrl=f"http://192.168.0.{str(args.lastByte)}:{data.myPort}"
     wallet.initKeys()
 
     data.blockchain = block_chain.Blockchain()
 
 
     myInfo={
-        "url":f"http://localhost:{data.myPort}",
+        "url":data.myUrl,
         "publicKey":data.publicKey
     }
     if data.myPort!=data.adminPort:#expecting admin to be listening
         kwargs = {}
         kwargs['timeout'] = 5
-        setupResponse=requests.get(f'http://localhost:{data.adminPort}/setup',json=myInfo,**kwargs)
+        setupResponse=requests.get(f'http://192.168.0.1:{data.adminPort}/setup',json=myInfo,**kwargs)#ston admin
 
     else:#admin is not listening yet
         setupNetwork.register(myInfo)

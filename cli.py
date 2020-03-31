@@ -39,10 +39,10 @@ print(sys.argv)
 # Execute the parse_args() method
 #args = parser.parse_args()
 
-#COORDINATOR_HOST=f'http://{args.host}:{args.port}'
-URL=f'http://localhost:{sys.argv[1]}'
-PORT=int(sys.argv[1])
-id = int(sys.argv[1])-5000
+#COORDINATOR_HOST=f'http://{args.host}:{args.port}' cli 1 5000
+URL=f'http://http://192.168.0.{sys.argv[1]}:{sys.argv[2]}'
+PORT=int(sys.argv[2])
+id = int(sys.argv[1])-1
 
 # Main Loop
 kwargs = {}

@@ -46,7 +46,7 @@ def mine_thread():
     print(f"I mined this block {testingBlock.current_hash} {testingBlock.nonce}")
 
     with data.miningLock:
-        data.someoneIsMining=False 
+        data.someoneIsMining=False
     broadcast.broadcast_a_block(testingBlock)
 
     return

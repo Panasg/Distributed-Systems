@@ -22,7 +22,7 @@ def register(values):#only executed by admin
     tempNodes.append(node)
     tempKeys.append(publicKey)
 
-    
+
     with data.lock:
         data.connectedParticipants=data.connectedParticipants+1
         if data.numOfParticipants==data.connectedParticipants:#now we must send to everyone(including admin) all nodes
@@ -60,7 +60,7 @@ def informEveryParticipant():#only executed by admin
                 'recipient_address':index,
                 'amount':100
             }
-            response=requests.post('http://localhost:'+str(data.myPort)+'/new_transaction',json=requestBody,**kwargs)
+            response=requests.post(data.myUrl+'/new_transaction',json=requestBody,**kwargs)
             print(f"Participant {index} got its money")
     return
 
