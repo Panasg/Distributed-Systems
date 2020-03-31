@@ -46,7 +46,7 @@ id = int(sys.argv[1])-1
 
 # Main Loop
 kwargs = {}
-kwargs['timeout'] = 25
+kwargs['timeout'] = 1000
 
 while True:
     cmd = input(">> ")
@@ -92,7 +92,7 @@ while True:
                 continue
             amount=int(part[1])
             trans_dict = {'recipient_address': recepient, 'amount': amount}
-            kwargs['timeout'] = 25
+            kwargs['timeout'] = 1000
             response=requests.post(f'{URL}/new_transaction',json=trans_dict,**kwargs)
             if response.status_code == 200: # Everthing is well done
                 print("Transaction Completed!")

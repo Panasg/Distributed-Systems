@@ -8,7 +8,7 @@ import time
 
 def broadcast_transaction(new_trans):
     kwargs = {}
-    kwargs['timeout'] = 25
+    kwargs['timeout'] = 1000
     trans_dict=new_trans.asDictionary()
 
     for node in data.allUrls:
@@ -18,7 +18,7 @@ def broadcast_transaction(new_trans):
 
 def broadcast_a_block(block):
     kwargs = {}
-    kwargs['timeout'] = 25
+    kwargs['timeout'] = 1000
     for node in data.allUrls:
         response=requests.post(node+"/receiveABlock",json=block.asDictionary(),**kwargs)
         print ( response.text)

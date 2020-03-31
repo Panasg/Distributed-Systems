@@ -37,7 +37,7 @@ def register(values):#only executed by admin
 def informEveryParticipant():#only executed by admin
     time.sleep(2)
     kwargs = {}
-    kwargs['timeout'] = 25
+    kwargs['timeout'] = 1000
 
     body = {"nodes":tempNodes,
             "publicKeys":tempKeys,

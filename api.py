@@ -255,7 +255,7 @@ if __name__ == '__main__':
     }
     if data.myPort!=data.adminPort:#expecting admin to be listening
         kwargs = {}
-        kwargs['timeout'] = 5
+        kwargs['timeout'] = 1000
         setupResponse=requests.get(f'http://192.168.0.1:{data.adminPort}/setup',json=myInfo,**kwargs)#ston admin
 
     else:#admin is not listening yet
