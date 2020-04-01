@@ -48,7 +48,7 @@ def mine_thread():
         data.miningTimes.append(time.time()-t1)
     testingBlock.current_hash=testingBlock.hash()#εχουμε το σωστο hash πλεον
 
-    print(f"I mined this block {testingBlock.current_hash} {testingBlock.nonce}")
+    print(f"I mined this block {testingBlock.index} {testingBlock.current_hash} {testingBlock.nonce}")
 
     with data.miningLock:
         data.someoneIsMining=False

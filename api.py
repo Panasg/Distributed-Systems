@@ -51,7 +51,7 @@ def show_it2():
     with data.lock:
         blockCh=[]
         for block in  data.blockchain.chain:
-            blockCh.append({'current':block.current_hash,'previous':block.previous_hash,'capa':len(block.transactions)})
+            blockCh.append({'current':block.current_hash,'previous':block.previous_hash,'index':len(block.index)})
 
         current_transactions=[]
         for trans in data.current_transactions.values():
@@ -62,7 +62,8 @@ def show_it2():
             "current_transactions":current_transactions,
             "utxos":data.utxos
         }
-        resp=f"Chain: {str(blockCh)} \nLength: {len(blockCh)}\nCurrent trans: {str(current_transactions)}\nLength:{len(current_transactions)}Utxos: {str(data.utxos)}"
+        resp=f"Chain: {str(blockCh)} \nLength: {len(blockCh)}\nCurrent trans: {str(current_transactions)}"\
+            f"\nLength:{len(current_transactions)}\nUtxos: {str(data.utxos)}"
     return resp,200
 
 @app.route('/receive_transaction', methods=['POST'])
