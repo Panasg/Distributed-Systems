@@ -2,6 +2,8 @@ import data
 import threading
 import broadcast
 import time
+import copy
+
 import utilities
 from random import seed,randint
 
@@ -34,12 +36,12 @@ def mine_thread():
                 break
 
         dictionary={
-            'index':data.blockchain.chain[-1].index+1,
-            'timestamp':time.time(),
+            'index':copy.deepcopy(data.blockchain.chain[-1].index+1),
+            'timestamp':copy.deepcopy(time.time()),
             'transactions':listOfTrans,
             'nonce': (randint(0, 100000)),
             'current_hash':'1234',
-            'previous_hash':data.blockchain.chain[-1].current_hash
+            'previous_hash':copy.deepcopy(data.blockchain.chain[-1].current_hash)
         }
     testingBlock=utilities.asObject(dictionary,"block")
 
