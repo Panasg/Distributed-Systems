@@ -8,18 +8,28 @@ import time
 
 def broadcast_transaction(new_trans):
     kwargs = {}
-    kwargs['timeout'] = 1000
+    kwargs['timeout'] = 25
     trans_dict=new_trans.asDictionary()
 
     for node in data.allUrls:
-        response=requests.post(node+"/receive_transaction",json=trans_dict,**kwargs)
+        try:
+            response=requests.post(node+"/receive_transaction",json=trans_dict,**kwargs)
+        except requests.exceptions.Timeout:
+            print(f'broadcast: Request {node}/receive_transaction timed out')
 
 
+except requests.exceptions.Timeout:
+    print(f'broadcast: Request "{h}/{api}" timed out')
+    pass
 
 def broadcast_a_block(block):
     kwargs = {}
-    kwargs['timeout'] = 1000
+    kwargs['timeout'] = 25
     for node in data.allUrls:
-        response=requests.post(node+"/receiveABlock",json=block.asDictionary(),**kwargs)
-        print ( response.text)
+        try:
+            response=requests.post(node+"/receiveABlock",json=block.asDictionary(),**kwargs)
+            print ( response.text)
+        except requests.exceptions.Timeout:
+            print(f'broadcast: Block {node}/receiveABlock timed out')
+
         #print(response.status_code)
