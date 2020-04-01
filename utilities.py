@@ -68,6 +68,7 @@ def consensus():
 
 def resolve_conflicts():
     neighbours = [a for a in data.allUrls if a!=data.myUrl]
+    print(f"My neibours are {neighbours} while i am {data.myUrl}")
     new_chain = None
 
     # We're only looking for chains longer than ours

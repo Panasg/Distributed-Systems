@@ -37,3 +37,9 @@ someoneIsMining=False
 benchmarkLock=threading.RLock()
 transactionTimes=[]
 miningTimes=[]
+
+#για οταν μας ζηταν το chain, θελουμε ανεξαρτητες δομες
+chainLock=threading.RLock()
+blockchainForCons=None
+current_transactionsForCons={}
+utxosForCons=[]

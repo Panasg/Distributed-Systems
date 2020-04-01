@@ -87,6 +87,10 @@ def receive_transaction():
         if len(data.current_transactions)>=data.capacity:
             mining.mine()
 
+    with data.chainLock:#πρεπει να ανανεωσουμε τα δεδομενα για το chain endpoint
+        data.current_transactionsorCons=copy.deepcopy(data.current_transactions)
+        data.utxosForCons=copy.deepcopy(data.utxos)
+
     return "transaction received",200
 
 @app.route('/receiveABlock', methods=['POST'])
@@ -103,6 +107,12 @@ def receive_a_block():
             for transaction in my_block.transactions:# πρεπει να κανουμε validate το genesis transaction
                 transaction.validate_transaction()
             data.blockchain.chain.append(my_block)
+
+            with data.chainLock:#πρεπει να ανανεωσουμε τα δεδομενα για το chain endpoint
+                data.blockchainForCons=copy.deepcopy(data.blockchain)
+                data.current_transactionsForCons=copy.deepcopy(data.current_transactions)
+                data.utxosForCons=copy.deepcopy(data.utxos)
+
         return "GenesisBlock added",200
 
     # to hash einai ypologismeno swsta
@@ -132,6 +142,11 @@ def receive_a_block():
 
             if len(data.current_transactions)>=data.capacity:#ισως ηρθαν στην ουρα πολλα ακομα transactions
                 mining.mine()
+
+            with data.chainLock:#πρεπει να ανανεωσουμε τα δεδομενα για το chain endpoint
+                data.blockchainForCons=copy.deepcopy(data.blockchain)
+                data.current_transactionsForCons=copy.deepcopy(data.current_transactions)
+                data.utxosForCons=copy.deepcopy(data.utxos)
             return "Block added",200
             #data.utxos_copy=data.utxos[:]
 
@@ -149,6 +164,12 @@ def receive_a_block():
         #consensus
         print("I will call consensus Now")
         consensus_result=utilities.consensus()
+
+        with data.chainLock:#πρεπει να ανανεωσουμε τα δεδομενα για το chain endpoint
+            data.blockchainForCons=copy.deepcopy(data.blockchain)
+            data.current_transactionsForCons=copy.deepcopy(data.current_transactions)
+            data.utxosForCons=copy.deepcopy(data.utxos)
+
         if len(data.current_transactions)>=data.capacity:#ισως ηρθαν στην ουρα πολλα ακομα transactions
             mining.mine()
         return "consensus",consensus_result
@@ -178,18 +199,18 @@ def new_transaction():
 
 @app.route('/chain', methods=['GET'])
 def full_chain():
-    with data.lock:
-        blockchainAsDiction=[block.asDictionary() for block in data.blockchain.chain]
+    with data.chainLock:
+        blockchainAsDiction=[block.asDictionary() for block in data.blockchainForCons.chain]
         transactionsAsDiction={}
-        for transId in data.current_transactions:#για καθε key του dictionary
-            transactionsAsDiction[transId] = data.current_transactions[transId].asDictionary()
+        for transId in data.current_transactionsForCons:#για καθε key του dictionary
+            transactionsAsDiction[transId] = data.current_transactionsForCons[transId].asDictionary()
 
 
         response = {
             'chain': blockchainAsDiction,
             'transactions':transactionsAsDiction,
-            'utxos':data.utxos,
-            'length': len(data.blockchain.chain),
+            'utxos':data.utxosForCons,
+            'length': blockchainAsDiction,
             }
     return jsonify(response), 200
 
