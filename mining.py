@@ -22,6 +22,11 @@ def mine_thread():
 
     seed()
     with data.lock:
+        if len(data.current_transactions)<data.capacity:
+            with data.miningLock:
+                data.someoneIsMining=False
+            return
+
         listOfTrans=[]
         for trans in data.current_transactions.values():
             listOfTrans.append(trans.asDictionary())

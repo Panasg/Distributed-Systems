@@ -51,7 +51,7 @@ def show_it2():
     with data.lock:
         blockCh=[]
         for block in  data.blockchain.chain:
-            blockCh.append({'current_hash':block.current_hash,'previous_hash':block.previous_hash})
+            blockCh.append({'current':block.current_hash,'previous':block.previous_hash,'capa':len(block.transactions)})
 
         current_transactions=[]
         for trans in data.current_transactions.values():
@@ -62,7 +62,7 @@ def show_it2():
             "current_transactions":current_transactions,
             "utxos":data.utxos
         }
-        resp=f"Chain: {str(blockCh)} \nLength: {len(blockCh)}\nCurrent trans: {str(current_transactions)}\nUtxos: {str(data.utxos)}"
+        resp=f"Chain: {str(blockCh)} \nLength: {len(blockCh)}\nCurrent trans: {str(current_transactions)}\nLength:{len(current_transactions)}Utxos: {str(data.utxos)}"
     return resp,200
 
 @app.route('/receive_transaction', methods=['POST'])
@@ -127,8 +127,8 @@ def receive_a_block():
     #1h to hash einai idio me to prohgoymeno hash, shmainei pws oi alysides symfvnoyn
     with data.lock:
         if  my_block.previous_hash==(data.blockchain.chain[-1]).current_hash:
-            #pairnoyme ta utxos opws htan sto prohgoymeno block
-            #data.utxos=data.utxos_copy[:]
+
+
             #kanoyme ena ena validate ta transactions san na ta vlepoyme prwth fora
             for transaction in my_block.transactions:
                 tran_id=transaction.id

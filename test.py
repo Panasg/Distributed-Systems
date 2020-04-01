@@ -1,5 +1,9 @@
 import socket
-hostname = socket.gethostname()
-IPAddr = socket.gethostbyname(hostname)
+trans={'asds':12312,'asdasfa':123124,'12qeadss':546}
 
-print(IPAddr)
+
+
+print (trans.values())
+
+for t in trans.values():
+    print (t)
