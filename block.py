@@ -76,9 +76,9 @@ def new_block(self, proof, previous_hash,transactions):
         broadcast.broadcast_a_block(block,self)
     return block
 '''
-def createBlockFromDictionary(dictionary):
+def createBlockFromDictionary(b):
     temp_trans_list=[]
-    for trans_dict in a_dictionary['transactions']:
+    for trans_dict in b['transactions']:
         temp_trans_list.append(transaction.createTranasactionFromDictionary(trans_dict))
     tempBlock= block(b['index'], b['timestamp'],temp_trans_list ,b['nonce'], b['current_hash'], b['previous_hash'])
     return tempBlock

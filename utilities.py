@@ -111,13 +111,13 @@ def resolve_conflicts():
 def valid_chain(chain):
     tempChain=[]
     for blockAsDict in chain:
-        tempChain.append(block.createBlockFromDictionary(blockAsDict))
+        tempChain.append( block.createBlockFromDictionary(blockAsDict) )
 
     i=0
-    for block in tempChain[1:]:
+    for bl in tempChain[1:]:
         i=i+1
-        if not mining.valid_proof(block):
+        if not mining.valid_proof(bl):
             return False
-        if block.previous_hash!=tempChain[i-1].current_hash:
+        if bl.previous_hash!=tempChain[i-1].current_hash:
             return False
     return True
