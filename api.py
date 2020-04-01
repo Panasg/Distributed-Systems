@@ -15,6 +15,7 @@ import wallet
 import setupNetwork
 import utilities
 import mining
+import copy
 # Instantiate the Node
 app = Flask(__name__)
 
