@@ -211,7 +211,7 @@ def full_chain():
             'chain': blockchainAsDiction,
             'transactions':transactionsAsDiction,
             'utxos':data.utxosForCons,
-            'length': blockchainAsDiction,
+            'length': len(blockchainAsDiction),
             }
     return jsonify(response), 200
 

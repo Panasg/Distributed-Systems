@@ -86,7 +86,7 @@ def resolve_conflicts():
 
 
             # Check if the length is longer and the chain is valid
-            if length > max_length and valid_chain(chain):
+            if (length > max_length) and valid_chain(chain):
                 max_length = length
 
                 ####απο τα dictionaries πρεπει να φτιαξουμε τα παντα ως αντικειμενα
