@@ -176,8 +176,8 @@ def receive_a_block():
             data.current_transactionsForCons=copy.deepcopy(data.current_transactions)
             data.utxosForCons=copy.deepcopy(data.utxos)
 
-        if len(data.current_transactions)>=data.capacity:#ισως ηρθαν στην ουρα πολλα ακομα transactions
-            mining.mine()
+        #if len(data.current_transactions)>=data.capacity:#ισως ηρθαν στην ουρα πολλα ακομα transactions
+            #mining.mine()
         return "consensus",consensus_result
             #an petyxei parnoyme chain, trans kai uxos
 
