@@ -52,6 +52,9 @@ def show_it2():
         blockCh=[]
         for block in  data.blockchain.chain:
             blockCh.append({'current':block.current_hash,'previous':block.previous_hash,'index':block.index})
+        for i in range (1,len(data.blockchain.chain)):
+            if data.blockchain.chain[i].previous_hash!=data.blockchain.chain[i-1].current_hash:
+                print(f"Invalid chain in index {i}")
 
         current_transactions=[]
         for trans in data.current_transactions.values():
