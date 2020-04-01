@@ -3,6 +3,7 @@ import  transaction
 import block
 import data
 import requests
+import mining
 
 def hashStringToString(stringToBeHashed):#dexetai string kai gyrnaei to hash toy ws string
     bytesOfString=stringToBeHashed.encode()
