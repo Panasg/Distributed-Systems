@@ -16,11 +16,9 @@ def broadcast_transaction(new_trans):
             response=requests.post(node+"/receive_transaction",json=trans_dict,**kwargs)
         except requests.exceptions.Timeout:
             print(f'broadcast: Request {node}/receive_transaction timed out')
+    return
 
 
-except requests.exceptions.Timeout:
-    print(f'broadcast: Request "{h}/{api}" timed out')
-    pass
 
 def broadcast_a_block(block):
     kwargs = {}
@@ -31,5 +29,6 @@ def broadcast_a_block(block):
             print ( response.text)
         except requests.exceptions.Timeout:
             print(f'broadcast: Block {node}/receiveABlock timed out')
+    return        
 
         #print(response.status_code)
