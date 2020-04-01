@@ -51,7 +51,7 @@ def show_it2():
     with data.lock:
         blockCh=[]
         for block in  data.blockchain.chain:
-            blockCh.append({'current':block.current_hash,'previous':block.previous_hash,'index':len(block.index)})
+            blockCh.append({'current':block.current_hash,'previous':block.previous_hash,'index':block.index})
 
         current_transactions=[]
         for trans in data.current_transactions.values():
