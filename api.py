@@ -157,6 +157,10 @@ def receive_a_block():
 
             data.blockchain.chain.append(my_block)
 
+            for transId in utilities.getListOfKeys(data.current_transactions):
+                if transId in data.transaction_pool:
+                    data.current_transactions.pop(transId)
+
             if len(data.current_transactions)>=data.capacity:#ισως ηρθαν στην ουρα πολλα ακομα transactions
                 mining.mine()
 
@@ -183,14 +187,18 @@ def receive_a_block():
         print("I will call consensus Now")
         consensus_result=utilities.consensus()
 
+        for transId in utilities.getListOfKeys(data.current_transactions):
+            if transId in data.transaction_pool:
+                data.current_transactions.pop(transId)
+
         with data.chainLock:#πρεπει να ανανεωσουμε τα δεδομενα για το chain endpoint
             data.blockchainForCons=copy.deepcopy(data.blockchain)
             data.current_transactionsForCons=copy.deepcopy(data.current_transactions)
             data.utxosForCons=copy.deepcopy(data.utxos)
             data.transactionPoolForCons=copy.deepcopy(data.transaction_pool)
 
-        #if len(data.current_transactions)>=data.capacity:#ισως ηρθαν στην ουρα πολλα ακομα transactions
-            #mining.mine()
+        if len(data.current_transactions)>=data.capacity:#ισως ηρθαν στην ουρα πολλα ακομα transactions
+            mining.mine()
         return "consensus",consensus_result
             #an petyxei parnoyme chain, trans kai uxos
 
