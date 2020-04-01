@@ -88,9 +88,9 @@ def receive_transaction():
         if len(data.current_transactions)>=data.capacity:
             mining.mine()
 
-    with data.chainLock:#πρεπει να ανανεωσουμε τα δεδομενα για το chain endpoint
-        data.current_transactionsorCons=copy.deepcopy(data.current_transactions)
-        data.utxosForCons=copy.deepcopy(data.utxos)
+        with data.chainLock:#πρεπει να ανανεωσουμε τα δεδομενα για το chain endpoint
+            data.current_transactionsForCons=copy.deepcopy(data.current_transactions)
+            data.utxosForCons=copy.deepcopy(data.utxos)
 
     return "transaction received",200
 
