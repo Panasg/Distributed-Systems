@@ -37,6 +37,7 @@ someoneIsMining=False
 benchmarkLock=threading.RLock()
 transactionTimes=[]
 miningTimes=[]
+transactionsServiced=0
 
 #για οταν μας ζηταν το chain, θελουμε ανεξαρτητες δομες
 chainLock=threading.RLock()

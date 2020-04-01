@@ -66,7 +66,8 @@ def show_it2():
             "utxos":data.utxos
         }
         resp=f"Chain: {str(blockCh)} \nLength: {len(blockCh)}\nCurrent trans: {str(current_transactions)}"\
-            f"\nLength:{len(current_transactions)}\nUtxos: {str(data.utxos)}"
+            f"\nLength:{len(current_transactions)}\nUtxos: {str(data.utxos)}"\
+            f"\nTransactions I serviced:{data.transactionsServiced}"
     return resp,200
 
 @app.route('/receive_transaction', methods=['POST'])
@@ -197,6 +198,7 @@ def new_transaction():
 
     with data.benchmarkLock:
         data.transactionTimes.append(time()-t1)
+        data.transactionsServiced=data.transactionsServiced+1
 
     return "Transaction sent",200
 
