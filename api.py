@@ -50,8 +50,14 @@ def benchmarks():
 def show_it2():
     with data.lock:
         blockCh=[]
+        transInChain=[]
+
         for block in  data.blockchain.chain:
             blockCh.append({'current':block.current_hash,'previous':block.previous_hash,'index':block.index})
+            temp=[]
+            for tr in block.transactions:
+                temp.append(tr.id)
+            transInChain.append(copy.deepcopy(temp))
         for i in range (1,len(data.blockchain.chain)):
             if data.blockchain.chain[i].previous_hash!=data.blockchain.chain[i-1].current_hash:
                 print(f"Invalid chain in index {i}")
@@ -65,9 +71,11 @@ def show_it2():
             "current_transactions":current_transactions,
             "utxos":data.utxos
         }
+
         resp=f"Chain: {str(blockCh)} \nLength: {len(blockCh)}\nCurrent trans: {str(current_transactions)}"\
             f"\nLength:{len(current_transactions)}\nUtxos: {str(data.utxos)}"\
-            f"\nTransactions I serviced:{data.transactionsServiced}"
+            f"\nTransactions I serviced:{data.transactionsServiced}"\
+            f"\n Trans ids in chain {transInChain}"
     return resp,200
 
 @app.route('/receive_transaction', methods=['POST'])
@@ -134,7 +142,7 @@ def receive_a_block():
         if  my_block.previous_hash==(data.blockchain.chain[-1]).current_hash:
 
 
-            #kanoyme ena ena validate ta transactions san na ta vlepoyme prwth fora
+
             for transaction in my_block.transactions:
                 tran_id=transaction.id
                 if  not  ( tran_id in data.current_transactions):
