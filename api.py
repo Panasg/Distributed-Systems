@@ -144,22 +144,26 @@ def receive_a_block():
 
             for transaction in my_block.transactions:
                 tran_id=transaction.id
-                if tran_id in data.transaction_pool:
-                    return "Transaction already in block",402
+                #if tran_id in data.transaction_pool:
+                    #return "Transaction already in block",402
+                for bl in data.blockchain.chain:# διατρεχουμε ολο το chain
+                    for tr in bl.transactions:
+                        if tr.id==tran_id:
+                            return "Transaction already in block",402
 
                 if  not  ( tran_id in data.current_transactions):
-                    return "unheard transaction in new  block",402
+                    return "Unheard transaction in new  block",402
             #afairoyme osa exoyme koina sto current_transactions
             for trans in my_block.transactions:
                 tran_id=trans.id
                 data.current_transactions.pop(tran_id)
-                data.transaction_pool.append(trans.id)
+                #data.transaction_pool.append(trans.id)
 
             data.blockchain.chain.append(my_block)
 
-            for transId in utilities.getListOfKeys(data.current_transactions):
-                if transId in data.transaction_pool:
-                    data.current_transactions.pop(transId)
+            #for transId in utilities.getListOfKeys(data.current_transactions):
+                #if transId in data.transaction_pool:
+                    #data.current_transactions.pop(transId)
 
             if len(data.current_transactions)>=data.capacity:#ισως ηρθαν στην ουρα πολλα ακομα transactions
                 mining.mine()
@@ -168,7 +172,7 @@ def receive_a_block():
                 data.blockchainForCons=copy.deepcopy(data.blockchain)
                 data.current_transactionsForCons=copy.deepcopy(data.current_transactions)
                 data.utxosForCons=copy.deepcopy(data.utxos)
-                data.transactionPoolForCons=copy.deepcopy(data.transaction_pool)
+                #data.transactionPoolForCons=copy.deepcopy(data.transaction_pool)
             return "Block added",200
             #data.utxos_copy=data.utxos[:]
 
@@ -195,7 +199,7 @@ def receive_a_block():
             data.blockchainForCons=copy.deepcopy(data.blockchain)
             data.current_transactionsForCons=copy.deepcopy(data.current_transactions)
             data.utxosForCons=copy.deepcopy(data.utxos)
-            data.transactionPoolForCons=copy.deepcopy(data.transaction_pool)
+            #data.transactionPoolForCons=copy.deepcopy(data.transaction_pool)
 
         if len(data.current_transactions)>=data.capacity:#ισως ηρθαν στην ουρα πολλα ακομα transactions
             mining.mine()
@@ -238,8 +242,8 @@ def full_chain():
             'chain': blockchainAsDiction,
             'transactions':transactionsAsDiction,
             'utxos':data.utxosForCons,
-            'length': len(blockchainAsDiction),
-            'pool':data.transactionPoolForCons
+            'length': len(blockchainAsDiction)#,
+            #'pool':data.transactionPoolForCons
             }
     return jsonify(response), 200
 
