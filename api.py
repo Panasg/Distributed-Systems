@@ -153,7 +153,7 @@ def receive_a_block():
             for trans in my_block.transactions:
                 tran_id=trans.id
                 data.current_transactions.pop(tran_id)
-                data.transaction_pool.add(trans.id)
+                data.transaction_pool.append(trans.id)
 
             data.blockchain.chain.append(my_block)
 
