@@ -147,7 +147,7 @@ def receive_a_block():
 
     #3h to previous hash den yparxei mesa sthn lista mas
         #consensus
-
+        print("I will call consensus Now")
         consensus_result=utilities.consensus()
         if len(data.current_transactions)>=data.capacity:#ισως ηρθαν στην ουρα πολλα ακομα transactions
             mining.mine()
