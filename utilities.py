@@ -84,6 +84,7 @@ def resolve_conflicts():
             chain = response.json()['chain']
             transactions = response.json()['transactions']
             utxos = response.json()['utxos']
+            pool=response.json()['pool']
 
 
             # Check if the length is longer and the chain is valid
@@ -99,12 +100,14 @@ def resolve_conflicts():
                 new_chain = objChain
                 new_transactions = objCurrentTransactions
                 new_utxos = utxos
+                new_pool=pool
 
     # Replace our chain if we discovered a new, valid chain longer than ours
     if new_chain:
         data.blockchain.chain = new_chain
         data.blockchain.transactions=new_transactions
         data.utxos=new_utxos
+        data.transaction_pool=pool
         return True
 
     return False

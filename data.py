@@ -13,6 +13,7 @@ id=None
 
 blockchain=None
 current_transactions={}#dictionary για να τα βρισκουμε με βαση το id
+transaction_pool=[]
 
 allUrls=[]
 allPublicKeys=[]
@@ -44,3 +45,4 @@ chainLock=threading.RLock()
 blockchainForCons=None
 current_transactionsForCons={}
 utxosForCons=[]
+transactionPoolForCons=[]
