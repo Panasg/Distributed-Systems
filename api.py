@@ -152,9 +152,13 @@ def receive_a_block():
                 for bl in data.blockchain.chain:# διατρεχουμε ολο το chain
                     for tr in bl.transactions:
                         if tr.id==tran_id:
+                            if len(data.current_transactions)>=data.capacity:#ισως ηρθαν στην ουρα πολλα ακομα transactions
+                                mining.mine()
                             return "Transaction already in block",402
 
                 if  not  ( tran_id in data.current_transactions):
+                    if len(data.current_transactions)>=data.capacity:#ισως ηρθαν στην ουρα πολλα ακομα transactions
+                        mining.mine()
                     return "Unheard transaction in new  block",402
             #afairoyme osa exoyme koina sto current_transactions
             for trans in my_block.transactions:
