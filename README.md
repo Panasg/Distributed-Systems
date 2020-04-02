@@ -33,9 +33,13 @@ pipenv install flask ( αν  εμφανιστεί μήνυμα κατά την �
             
     
 4.Run the cli:
+
     * $ pipenv run python cli.py port_number last_digit_of_ip {port}
     
+    
    e.g for 5 nodes: 
+   
+   
       * `$ pipenv run python3.7 cli.py -p 5000 -a 5000 -l 1`
       * `$ pipenv run python3.7 cli.py -p 5001 -a 5000 -l 2`
       * `$ pipenv run python3.7 cli.py -p 5001 -a 5000 -l 3`
