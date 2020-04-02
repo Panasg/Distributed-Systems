@@ -42,5 +42,5 @@ pipenv install flask ( αν  εμφανιστεί μήνυμα κατά την �
       * `$ pipenv run python3.7 cli.py -p 5001 -a 5000 -l 4`
       * `$ pipenv run python3.7 cli.py -p 5001 -a 5000 -l 5`
       
- Note that the "python3.7" can be 3.6 depending on the python's version  installed in each machine. 
+ Note that the "python3.7" can be 3.6 depending on the python's version  installed on each computer. 
  
