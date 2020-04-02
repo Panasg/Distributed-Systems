@@ -22,15 +22,25 @@ pipenv install flask ( αν  εμφανιστεί μήνυμα κατά την �
    where admins_port_number==port_number only for the admin and last digit goes from 1 ( admin ) to 5 ( for 5 nodes)
    
    e.g for 5 nodes: 
-      * `$ pipenv run python api.py -p 5000 -a 5000 -l 1`
-      * `$ pipenv run python api.py -p 5001 -a 5000 -l 2`
-      * `$ pipenv run python api.py -p 5001 -a 5000 -l 3`
-      * `$ pipenv run python api.py -p 5001 -a 5000 -l 4`
-      * `$ pipenv run python api.py -p 5001 -a 5000 -l 5`
+      * `$ pipenv run python3.7 api.py -p 5000 -a 5000 -l 1`
+      * `$ pipenv run python3.7 api.py -p 5001 -a 5000 -l 2`
+      * `$ pipenv run python3.7 api.py -p 5001 -a 5000 -l 3`
+      * `$ pipenv run python3.7 api.py -p 5001 -a 5000 -l 4`
+      * `$ pipenv run python3.7 api.py -p 5001 -a 5000 -l 5`
    
    In the above example , the first node is the admin  with  local ip address : 192.168.0.1
       
             
-```    
-5.Run the cli:
+    
+4.Run the cli:
     * $ pipenv run python cli.py port_number last_digit_of_ip {port}
+    
+   e.g for 5 nodes: 
+      * `$ pipenv run python3.7 cli.py -p 5000 -a 5000 -l 1`
+      * `$ pipenv run python3.7 cli.py -p 5001 -a 5000 -l 2`
+      * `$ pipenv run python3.7 cli.py -p 5001 -a 5000 -l 3`
+      * `$ pipenv run python3.7 cli.py -p 5001 -a 5000 -l 4`
+      * `$ pipenv run python3.7 cli.py -p 5001 -a 5000 -l 5`
+      
+ Note that the "python3.7" can be 3.6 depending on the python's version  installed in each machine. 
+ 
