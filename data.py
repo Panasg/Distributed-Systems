@@ -24,9 +24,9 @@ hasReceivedGenesisBlock=False
 connectedParticipants=0
 
 #αλλάζουμε αυτες τις τιμές για να παραμετροποι΄ήσουμε το συστημά μας
-numOfParticipants=5
-capacity=1
-difficulty=5
+numOfParticipants=10
+capacity=10
+difficulty=4
 
 lock = threading.RLock()# ώστε καθε νημα που έχει προσβαση στις ανώτερες τιμές να εχει ατομική προσβαση
 

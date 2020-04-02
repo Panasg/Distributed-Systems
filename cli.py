@@ -44,6 +44,9 @@ URL=f'http://192.168.0.{sys.argv[1]}:{sys.argv[2]}'
 PORT=int(sys.argv[2])
 id = int(sys.argv[1])-1
 
+if PORT ==5002:
+    id=id+5#ωστε τα δευτερα να διαβαζουν το σωστο τους 
+
 # Main Loop
 kwargs = {}
 kwargs['timeout'] = 1000
@@ -82,14 +85,14 @@ while True:
             print("Error occured")  # Some error occured in creating the new transaction
 
     elif cmd == 'bulk_transactions':
-        f = open(f'5nodes/transactions{id}.txt', "r")
+        f = open(f'10nodes/transactions{id}.txt', "r")
         #f = open(f'transactions{id}.txt', "r")
         for x in f:
             part = x.split(' ')
             recepient = int((part[0].split('id'))[1])
-            if recepient==id:
-                print("Can't send money to myself")
-                continue
+            #if recepient==id:
+                #print("Can't send money to myself")
+                #continue
             amount=int(part[1])
             trans_dict = {'recipient_address': recepient, 'amount': amount}
             kwargs['timeout'] = 1000
