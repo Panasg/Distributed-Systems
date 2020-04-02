@@ -1,6 +1,6 @@
 ## Installation
 
-1. Make sure [Python 3.6+](https://www.python.org/downloads/) is installed.
+1. Make sure [Python 3.6+](https://www.python.org/downloads/) is installed along with pip.
 
 
 2. Install [pipenv](https://github.com/kennethreitz/pipenv) and requirements ( dependancies )
