@@ -73,12 +73,12 @@ def show_it2():
         }
 
 
-        blockCh=blockCh[:10]
-        transInChain=transInChain[:10]
-        resp=f"Chain: {str(blockCh)} \nLength: {len(blockCh)}\nCurrent trans: {str(current_transactions)}"\
+        blockCh1=blockCh[:10]
+        transInChain1=transInChain[:10]
+        resp=f"Chain: {str(blockCh1)} \nLength: {len(blockCh)}\nCurrent trans: {str(current_transactions)}"\
             f"\nLength:{len(current_transactions)}\nUtxos: {str(data.utxos)}"\
             f"\nTransactions I serviced:{data.transactionsServiced}"\
-            f"\n Trans ids in chain {transInChain}"
+            f"\n Trans ids in chain {transInChain1}"
     return resp,200
 
 @app.route('/receive_transaction', methods=['POST'])
