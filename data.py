@@ -26,7 +26,7 @@ connectedParticipants=0
 #αλλάζουμε αυτες τις τιμές για να παραμετροποι΄ήσουμε το συστημά μας
 numOfParticipants=10
 capacity=1
-difficulty=4
+difficulty=5
 
 lock = threading.RLock()# ώστε καθε νημα που έχει προσβαση στις ανώτερες τιμές να εχει ατομική προσβαση
 
