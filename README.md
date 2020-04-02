@@ -1,11 +1,18 @@
 ## Installation
 
 1. Make sure [Python 3.6+](https://www.python.org/downloads/) is installed.
+
+
 2. Install [pipenv](https://github.com/kennethreitz/pipenv) and requirements ( dependancies )
+
 
 ```
 $ pip install pipenv ( ή sudo -H pip3 install -U pipenv σε ubuntu)
+
+
 pipenv --python /usr/src/Python-3.7.4/python ( σε ubuntu 16.04 ενδέχεται να χρειαστεί)
+
+
 pipenv install flask ( αν  εμφανιστεί μήνυμα κατά την εκτέλεση )
 ```
 
