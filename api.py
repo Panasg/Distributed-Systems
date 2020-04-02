@@ -72,6 +72,9 @@ def show_it2():
             "utxos":data.utxos
         }
 
+
+        blockCh=blockCh[:10]
+        transInChain=transInChain[:10]
         resp=f"Chain: {str(blockCh)} \nLength: {len(blockCh)}\nCurrent trans: {str(current_transactions)}"\
             f"\nLength:{len(current_transactions)}\nUtxos: {str(data.utxos)}"\
             f"\nTransactions I serviced:{data.transactionsServiced}"\
